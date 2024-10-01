@@ -20,11 +20,11 @@ public class Ultrasonic {
 
     while (!toque.isPressed()) {
       if (sonic.getDistance() > 30) {
+        Motor.A.forward();
         Motor.B.forward();
-        Motor.C.forward();
       } else {
+        Motor.A.stop();
         Motor.B.stop();
-        Motor.C.stop();
       }
     }  
   }
