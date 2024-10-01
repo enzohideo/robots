@@ -37,7 +37,6 @@ public class Atividade1 {
       pilot.stop();
       Sound.playTone(500, 2000);
     }
-    Delay.msDelay(1000);
 
     pilot.arc(-30, -90, false);
     pilot.travel(30, false);
