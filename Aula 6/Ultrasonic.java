@@ -13,8 +13,11 @@ import lejos.nxt.TouchSensor;
 
 public class Ultrasonic {
   public static void main(String[] args) {
-	 TouchSensor toque = new TouchSensor(SensorPort.S3);
-    UltrasonicSensor sonic = new UltrasonicSensor(SensorPort.S4);
+    Button.waitForAnyPress();
+
+    TouchSensor toque = new TouchSensor(SensorPort.S3);
+    UltrasonicSensor sonic = new UltrasonicSensor(SensorPort.S1);
+
     while (!toque.isPressed()) {
       if (sonic.getDistance() > 30) {
         Motor.B.forward();
