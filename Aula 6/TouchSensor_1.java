@@ -1,3 +1,9 @@
+/*
+ * 
+ * Aula 6 - Programa 1
+ * 
+*/
+
 import lejos.nxt.LCD;
 import lejos.nxt.Button;
 import lejos.nxt.Sound;
@@ -6,6 +12,7 @@ import lejos.nxt.Motor;
 import lejos.robotics.navigation.*;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
+
 public class TouchSensor_1 {
   public static void main(String[] args) {
 	Button.waitForAnyPress();

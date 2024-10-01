@@ -1,9 +1,16 @@
+/*
+ * 
+ * Aula 6 - Programa 2
+ * 
+*/
+
 import lejos.nxt.LightSensor;
 import lejos.nxt.Sound;
 import lejos.util.Delay;
 import lejos.nxt.LCD; 
 import lejos.nxt.SensorPort;
 import lejos.nxt.Button;
+
 public class Light1 {
   public static void main(String[] args) {
     LCD.drawString("Sensor Optico", 0, 0); 
