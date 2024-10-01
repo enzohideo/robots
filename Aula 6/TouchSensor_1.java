@@ -25,12 +25,12 @@ public class TouchSensor_1 {
 	pilot.arc(30, -90, true);
 	while (!toque.isPressed() && pilot.isMoving()) {
 	}
-    if toque.isPressed(){ 
+     if toque.isPressed(){
+		Motor.A.stop();
+		Motor.B.stop(); 
 		Sound.playTone(500, 2000);
 	}
 	pilot.arc(-30, -90, false);
 	pilot.travel(30, false);
   }
 }
-
-
