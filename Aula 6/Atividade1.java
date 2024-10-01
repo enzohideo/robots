@@ -23,8 +23,7 @@ public class Atividade1 {
 
     TouchSensor toque = new TouchSensor(SensorPort.S3);
     UltrasonicSensor sonic = new UltrasonicSensor(SensorPort.S1);
-    DifferentialPilot pilot = new DifferentialPilot(2.205 * 2.56, 4.527 * 2.56,
-                               Motor.A, Motor.B);
+    DifferentialPilot pilot = new DifferentialPilot(5.6, 11.2, Motor.A, Motor.B);
 
     pilot.forward();
     while (sonic.getDistance() > 30) {}
