@@ -4,8 +4,8 @@ import lejos.robotics.subsumption.*;
 class AvoidObstacle implements Behavior {
   private UltrasonicSensor sonar;
 
-  public AvoidObstacle() {        // define o construtor da classe
-    sonar = new UltrasonicSensor(SensorPort.S3);
+  public AvoidObstacle() {
+    sonar = new UltrasonicSensor(SensorPort.S1);
   }
 
   public boolean takeControl() {
