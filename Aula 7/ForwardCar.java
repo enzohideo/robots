@@ -3,6 +3,7 @@ import lejos.robotics.subsumption.*;
 
 class AvoidObstacle implements Behavior {
   private UltrasonicSensor sonar;
+  private boolean right = true;
 
   public AvoidObstacle() {
     sonar = new UltrasonicSensor(SensorPort.S1);
@@ -11,15 +12,22 @@ class AvoidObstacle implements Behavior {
   public boolean takeControl() {
     return sonar.getDistance() < 25 ;  //returns True if an obstacle is detected
   }
+
   public void suppress() {
     //Since this is the highest priority behavior,
     // suppress will never be called.
   }
+
   public void action() {
     LCD.clear();
     LCD.drawString("DetectWall",0,1);
-    // start Motor.A rotating backward
+
+    if (right)
       ForwardCar.rightMotor.rotate(-360);
+    else
+      ForwardCar.leftMotor.rotate(-360);
+
+    right = !right;
   }
 }
 
