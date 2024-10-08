@@ -1,6 +1,5 @@
 import lejos.nxt.*;
-import lejos.robotics.subsumption.behavior; // importa a interface behavior
-import lejos.robotics.subsumption.arbitrator; // importa a classe arbitrator
+import lejos.robotics.subsumption.*;
 
 class AvoidObstacle implements Behavior {
   private UltrasonicSensor sonar;
