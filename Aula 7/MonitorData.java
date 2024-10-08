@@ -18,7 +18,7 @@ public class MonitorData {
       while(true) {  
         LCD.clear();
         LCD.drawString("MotorA ="+Motor.A.getTachoCount(), 0 , 0);
-        LCD.drawString("MotorC ="+Motor.C.getTachoCount(), 0 , 1);
+        LCD.drawString("MotorC ="+Motor.B.getTachoCount(), 0 , 1);
         LCD.drawString("Sonar ="+sonar.getDistance(), 0 , 2);
         try { this.sleep(delay); }
         catch (Exception e) { }
