@@ -49,7 +49,7 @@ public class MonitorData {
     UltrasonicSensor  sonic  =  new  UltrasonicSensor(SensorPort.S1);
     DifferentialPilot  pilot  =  new  DifferentialPilot(5.6f, 11.2f, Motor.A, Motor.B);
     RobotMonitor  rm  =  new  RobotMonitor(400, sonic);  
-    RobotSinger sound_thread = new RobotSinger(300);
+    RobotSinger sound_thread = new RobotSinger(600);
     pilot.forward();  
     rm.start(); 
     sound_thread.start(); 
