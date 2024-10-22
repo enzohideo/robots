@@ -25,6 +25,26 @@ import lejos.nxt.NXTMotor;
  * porém ele é bem-sucedido na pista interna. Na curva pequena de ~90° ele
  * falha pela borda interna, mas passa pela borda externa.
  *
+ * 2) Integral
+ * 
+ * Com valores de k_i > 0.01 o robô começa a girar ou andar para trás (em
+ * alguns casos).
+ *
+ * Decidi modificar o cálculo da integral para zerar o erro acumulado quando o
+ * erro cruza a reta 0, isto é, quando o robô passa de branco para preto ou de
+ * preto para branco. A ideia é que a integral não vai mais "tentar corrigir"
+ * se o robô tiver voltado para a linha:
+ *
+ * if (acc_error * error < 0)
+ *   acc_error = 0;
+ *
+ * Com k_i = 0.01 e a modificação acima, o robô começou a balançar para
+ * esquerda e direita, fez um giro de 180 e começa a cambalear novamente.
+ * (levemente melhor que o comportamento anterior de girar infinitamente).
+ *
+ * Com k_i = 0.001 não foi observado nenhum comportamento anormal (girar,
+ * balançar, andar para trás), mas já que a constante é muito pequena, é
+ * difícil dizer se o valor integral está fazendo efeito ou não.
  */
 
 public class FollowLine{
@@ -32,23 +52,31 @@ public class FollowLine{
   static NXTMotor mRight, mLeft;
 
   public static int middle_value = 49;
-  public static int u_line = 30;
-  public static int k_p = 2;
+  public static float u_line = 30f;
+  public static float k_p = 2f;
+  public static float k_i = 0.01f;
+  public static int acc_e = 0;
 
   public static int error() {
     return light.getLightValue() - middle_value;
   }
 
-  public static int proportional(int e) {
+  public static float proportional(int e) {
     return k_p * e;
   }
 
-  public static int clamp(int value) {
-    return value > 100 ? 100 : (value < -100 ? -100 : value);
+  public static float integral(int e) {
+    if (acc_e * e < 0) acc_e = 0;
+    acc_e = acc_e + e;
+    return k_i * acc_e;
   }
 
-  public static void turn(int t) {
-    int u = u_line + t;
+  public static int clamp(float value) {
+    return (int) (value > 100 ? 100 : (value < -100 ? -100 : value));
+  }
+
+  public static void turn(float t) {
+    float u = u_line + t;
     mRight.setPower(clamp(u));
 
     u = u_line - t;
@@ -64,7 +92,7 @@ public class FollowLine{
 
     while (true) {
       int e = error();
-      int t = proportional(e);
+      float t = proportional(e) + integral(e);
       turn(t);
     }
   }
