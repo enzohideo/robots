@@ -45,6 +45,11 @@ import lejos.nxt.NXTMotor;
  * Com k_i = 0.001 não foi observado nenhum comportamento anormal (girar,
  * balançar, andar para trás), mas já que a constante é muito pequena, é
  * difícil dizer se o valor integral está fazendo efeito ou não.
+ *
+ * 3) Derivada
+ *
+ * O robô se dá bem na maior parte das curvas, porém falha nas curvas mais
+ * estreitas. (sem a modificação dos monitores).
  */
 
 public class FollowLine{
@@ -52,9 +57,13 @@ public class FollowLine{
   static NXTMotor mRight, mLeft;
 
   public static int middle_value = 49;
-  public static float u_line = 30f;
+
+  public static float u_line = 20f;
   public static float k_p = 2f;
   public static float k_i = 0.01f;
+  public static float k_d = 16f;
+
+  public static int prev_e = 0;
   public static int acc_e = 0;
 
   public static int error() {
@@ -69,6 +78,10 @@ public class FollowLine{
     if (acc_e * e < 0) acc_e = 0;
     acc_e = acc_e + e;
     return k_i * acc_e;
+  }
+
+  public static float derivative(int e) {
+    return k_d * (e - prev_e);
   }
 
   public static int clamp(float value) {
@@ -92,8 +105,9 @@ public class FollowLine{
 
     while (true) {
       int e = error();
-      float t = proportional(e) + integral(e);
+      float t = proportional(e) + derivative(e);
       turn(t);
+      prev_e = e;
     }
   }
 }
