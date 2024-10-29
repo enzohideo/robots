@@ -18,24 +18,31 @@ public class Align {
   static LightSensor light_right;
   static LightSensor light_left;
 
-  public static int middle_value = 49;
+  public static int middle_value_left = 49;
+  public static int middle_value_right = 55;
 
-  public static float u_line = 25f;
-  public static float k_p = 0.5f;
+  public static float u_line = 0;
+  public static float k_p = 2.5f;
   public static float k_i = 0f;
-  public static float k_d = 0.001f;
+  public static float k_d = 1f;
 
   public static int prev_error_left = 0;
   public static int prev_error_right = 0;
   public static int acc_error_left = 0;
   public static int acc_error_right = 0;
 
-  public static int error(LightSensor light_) {
-    return light_.getLightValue() - middle_value;
+  public static int error(Side side) {
+    if (side == Side.LEFT) {
+      return light_left.getLightValue() - middle_value_left;
+    } else {
+      return light_right.getLightValue() - middle_value_right;
+    }
   }
 
   public static float proportional(int e) {
-    return k_p * e;
+    // Stop motor before crossing the line
+    float tmp = k_p * e;
+    return tmp < 0 ? e : tmp;
   }
 
   public static float integral(int e, Side side) {
@@ -76,8 +83,14 @@ public class Align {
     motor_left = new NXTMotor(MotorPort.C);
 
     while (true) {
-      int error_right = error(light_right);
-      int error_left = error(light_left);
+
+      LCD.drawString("Left", 0, 0);
+      LCD.drawInt(light_left.getLightValue(),  0, 1);
+      LCD.drawString("Right", 0, 2);
+      LCD.drawInt(light_right.getLightValue(),  0, 3);
+
+      int error_right = error(Side.RIGHT);
+      int error_left = error(Side.LEFT);
 
       float t_right = proportional(error_right) +
         integral(error_right, Side.RIGHT) +
