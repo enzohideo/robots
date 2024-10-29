@@ -18,6 +18,8 @@ public class Align {
   static LightSensor light_right;
   static LightSensor light_left;
 
+  public static int light_value_left = 49;
+  public static int light_value_right = 55;
   public static int middle_value_left = 49;
   public static int middle_value_right = 55;
 
@@ -33,9 +35,9 @@ public class Align {
 
   public static int error(Side side) {
     if (side == Side.LEFT) {
-      return light_left.getLightValue() - middle_value_left;
+      return light_value_left - middle_value_left;
     } else {
-      return light_right.getLightValue() - middle_value_right;
+      return light_value_right- middle_value_right;
     }
   }
 
@@ -83,22 +85,28 @@ public class Align {
     motor_left = new NXTMotor(MotorPort.C);
 
     while (true) {
+      light_value_left = light_left.getLightValue();
+      light_value_right = light_right.getLightValue();
 
       LCD.drawString("Left", 0, 0);
-      LCD.drawInt(light_left.getLightValue(),  0, 1);
+      LCD.drawInt(light_value_left,  0, 1);
       LCD.drawString("Right", 0, 2);
-      LCD.drawInt(light_right.getLightValue(),  0, 3);
+      LCD.drawInt(light_value_right,  0, 3);
 
       int error_right = error(Side.RIGHT);
       int error_left = error(Side.LEFT);
 
-      float t_right = proportional(error_right) +
-        integral(error_right, Side.RIGHT) +
-        derivative(error_right, Side.RIGHT);
+      float t_right = (light_value_right < 60)
+        ? proportional(error_right) +
+          integral(error_right, Side.RIGHT) +
+          derivative(error_right, Side.RIGHT)
+        : 25;
 
-      float t_left = proportional(error_left) +
-        integral(error_left, Side.LEFT) +
-        derivative(error_left, Side.LEFT);
+      float t_left = (light_value_left < 60)
+        ? proportional(error_left) +
+          integral(error_left, Side.LEFT) +
+          derivative(error_left, Side.LEFT)
+        : 25;
 
       turn(motor_right, t_right);
       turn(motor_left, t_left);
