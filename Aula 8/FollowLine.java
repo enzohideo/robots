@@ -5,6 +5,7 @@ import lejos.nxt.MotorPort;
 import lejos.nxt.SensorPort;
 import lejos.util.Delay;
 import lejos.nxt.NXTMotor;
+import java.lang.Math;
 
 // black  40~41
 // middle 47-52
@@ -84,16 +85,20 @@ public class FollowLine{
     return k_d * (e - prev_e);
   }
 
-  public static int clamp(float value) {
-    return (int) (value > 100 ? 100 : (value < -100 ? -100 : value));
+  public static int clamp(float value, float lower, float upper) {
+    return (int) (value > upper ? upper : (value < lower ? lower : value));
   }
 
   public static void turn(float t) {
-    float u = u_line + t;
-    mRight.setPower(clamp(u));
+    t = clamp(t, -1, 1);
 
-    u = u_line - t;
-    mLeft.setPower(clamp(u));
+    if (t > 0) {
+      mLeft.setPower((int) u_line);
+      mRight.setPower((int) ((1 - 2 * t) * u_line));
+    } else {
+      mLeft.setPower((int) ((1 + 2 * t) * u_line));
+      mRight.setPower((int) u_line);
+    }
   }
 
   public static void main(String [] args){
