@@ -8,6 +8,25 @@ import lejos.util.Delay;
 import lejos.nxt.NXTMotor;
 import java.lang.Math;
 
+/*
+Enzo Hideo Kobayashi N° USP: 12542421
+Rafael de Oliveira Magalhães N°USP: 12566122
+
+Relatório e Observações:
+
+Primeiramente colocou-se o sensor de distância a 90° da frente do robô (ou
+seja, perfeitamente alinhado ao lado), no entanto, esse posicionamento não
+funciona corretamente pois, por exemplo, caso o robô identifique que ele está
+se aproximando da parede, ele fará um movimento para se afastar, porém este
+movimento deixará o sensor ainda mais perto da parede, o que é um problema.
+
+A fim de evitar esse tipo de situação, a solução encontrada foi deixar o sensor
+com uma angulação menor que 90° (algo mais próximo de 60°), como é possível ver
+no vídeo. A única desvantagem desta abordagem é ter que calcular a nova
+distância do sensor para a parede, a fim de que a distância lateral do robô
+para a parede continue sendo de 20cm.
+*/
+
 public class FollowWall{
   static NXTMotor mRight, mLeft;
   static UltrasonicSensor sensor;
