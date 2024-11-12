@@ -21,3 +21,7 @@ up() {
     && nxj -o "${basename}.nxj" "${basename}" ${@:2} \
     || error
 }
+
+graph() {
+  git log --oneline --graph --all
+}
