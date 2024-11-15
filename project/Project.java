@@ -229,17 +229,15 @@ class ColorPID {
   }
 
   public void run() {
-    while (true) {
-      int value = sensor.getLightValue();
-      int error = getError(value);
+    int value = sensor.getLightValue();
+    int error = getError(value);
 
-      turn((value < this.white)
-        ? proportional(error) + integral(error) + derivative(error)
-        : 25
-      );
+    turn((value < this.white)
+      ? proportional(error) + integral(error) + derivative(error)
+      : 25
+    );
 
-      prevError = error;
-    }
+    prevError = error;
   }
 }
 
@@ -251,8 +249,10 @@ class Align implements IState {
   ColorPID rColorPID;
 
   public void run() {
-    rColorPID.run();
-    lColorPID.run();
+    while(true) {
+      rColorPID.run();
+      lColorPID.run();
+    }
   }
 
   public Align(NXTMotor lMotor, NXTMotor rMotor) {
