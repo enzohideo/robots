@@ -4,43 +4,54 @@ import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.LCD;
 import lejos.robotics.navigation.Waypoint;
 
 interface IState {
   public void run();
 }
 
-// class Sonar implements IState {
-//
-//   private UltrasonicSensor sonar;
-//   private NXTMotor motor_left;
-//   private NXTMotor motor_right;
-//   private float distance_no_object = 30.0;
-//   private float distance_small_object = 20.0;
-//   private float distance_tall_object = 15.0;
-//   private float distance_movement = 10.0;
-//
-//   public Sonar(UltrasonicSensor sonar, NXTMotor motor_left, NXTMotor motor_right) {
-//     this.sonar = sonar;
-//     this.motor_left = motor_left;
-//     this.motor_right = motor_right;
-//   }
-//
-//   public void run() {
-//     float distance = this.sonar.getDistance();
-//     if (distance > this.distance_no_object) {
-//       this.motor_right.setPower(distance_movement);
-//       this.motor_left.setPower(distance_movement);
-//     }
-//     else if (distance > this.distance_small_object) {
-//
-//     }
-//     else {
-//       
-//     }
-//   }
-//
-// }
+class Sonar {
+  public enum Pipe {
+    SHORT, TALL
+  }
+
+  private UltrasonicSensor sonar;
+  private NXTMotor lMotor;
+  private NXTMotor rMotor;
+  private float shortPipeThreshold = 20.0f;
+  private float tallPipeThreshold = 15.0f;
+  private int power = 10;
+  private int samplingPeriod = 100;
+
+  public Sonar(UltrasonicSensor sonar, NXTMotor lMotor, NXTMotor rMotor) {
+    this.sonar = sonar;
+    this.lMotor = lMotor;
+    this.rMotor = rMotor;
+  }
+
+  public Pipe run() {
+    this.rMotor.setPower(power);
+    this.lMotor.setPower(power);
+
+    while (true) {
+      float distance = this.sonar.getDistance();
+
+      if (distance < this.tallPipeThreshold) {
+        return Pipe.TALL;
+      } else if (distance < this.shortPipeThreshold) {
+        return Pipe.SHORT;
+      }
+
+      try {
+        Thread.sleep(samplingPeriod);
+      } catch (InterruptedException error) {
+        LCD.drawString("Sonar ERROR: interrupted", 0, 0);
+      }
+    }
+  }
+}
 
 class Claw {
   private NXTRegulatedMotor motor;
@@ -286,7 +297,7 @@ public class Project {
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
 
     align = new Align(lMotor, rMotor);
-    // sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
+    sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
 
     Button.waitForAnyPress();
