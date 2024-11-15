@@ -1,6 +1,5 @@
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
-import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.NXTRegulatedMotor;
@@ -266,25 +265,29 @@ class Align implements IState {
 }
 
 public class Project {
+  static SensorPort ultrasonicSensorPort = SensorPort.S1;
+
   static MotorPort lMotorPort = MotorPort.A;
   static MotorPort rMotorPort = MotorPort.C;
-  static NXTRegulatedMotor lRegulatedMotor = Motor.A;
-  static NXTRegulatedMotor rRegulatedMotor = Motor.C;
-  static NXTRegulatedMotor clawMotor = Motor.B;
-  static SensorPort ultrasonicSensorPort = SensorPort.S1;
+  static MotorPort clawMotorPort = MotorPort.B;
 
   static Align align;
   static Sonar sonar;
   static Claw claw;
 
   public static void main(String[] args) {
-    // UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(ultrasonicSensorPort);
+    UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(ultrasonicSensorPort);
+
     NXTMotor lMotor = new NXTMotor(lMotorPort);
     NXTMotor rMotor = new NXTMotor(rMotorPort);
 
+    NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(lMotorPort);
+    NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(rMotorPort);
+    NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
+
     align = new Align(lMotor, rMotor);
     // sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
-    // claw = new Claw(clawMotor);
+    claw = new Claw(clawMotor);
 
     Button.waitForAnyPress();
 
