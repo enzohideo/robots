@@ -8,11 +8,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1726935750,
-        "narHash": "sha256-M9hQy89uU/0MVkB5aAo+5iv0kU0h6OiMNoB6ka/zdpk=",
+        "lastModified": 1731635106,
+        "narHash": "sha256-gYih3mPARw++Ph+TiUy/Q4OgiIjoTsPnFhj2gRfh2Uo=",
         "owner": "enzohideo",
         "repo": "lejos-nix",
-        "rev": "b327008bb505f057345a21be079c60bad07eca78",
+        "rev": "ef72869f3bc3bcb5602a105b688717c0f6d480b3",
         "type": "github"
       },
       "original": {
@@ -24,8 +24,8 @@
     "nixpkgs": {
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-9UTxR8eukdg+XZeHgxW5hQA9fIKHsKCdOIUycTryeVw=",
-        "path": "/nix/store/60sn02zhawl3kwn0r515zff3h6hg6ydz-source",
+        "narHash": "sha256-Dqg6si5CqIzm87sp57j5nTaeBbWhHFaVyG7V6L8k3lY=",
+        "path": "/nix/store/zq2axpgzd5kykk1v446rkffj3bxa2m2h-source",
         "type": "path"
       },
       "original": {
