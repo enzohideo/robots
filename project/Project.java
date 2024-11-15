@@ -1,5 +1,5 @@
 import lejos.nxt.Button;
-import lejos.nxt.LightSensor;
+import lejos.nxt.ColorSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
@@ -168,13 +168,13 @@ class Claw {
 //
 //
 
-class LightPID {
+class ColorPID {
   public static float u_line = 0;
   public static float k_p = 2.5f;
   public static float k_i = 0f;
   public static float k_d = 1f;
 
-  LightSensor light;
+  ColorSensor sensor;
   NXTMotor motor;
 
   public int white = 60;
@@ -182,11 +182,11 @@ class LightPID {
   public int prev_error = 0;
   public int acc_error = 0;
 
-  public LightPID(LightSensor light, NXTMotor motor, int middle, int white) {
-    // this.light = light;
-    // this.motor = motor;
-    // this.middle = middle;
-    // this.white = white;
+  public ColorPID(ColorSensor sensor, NXTMotor motor, int middle, int white) {
+    this.sensor = sensor;
+    this.motor = motor;
+    this.middle = middle;
+    this.white = white;
   }
 
   public int getError(int value) {
@@ -209,9 +209,9 @@ class LightPID {
     return k_d * (error - prev_error);
   }
 
-  public void turn(NXTMotor motor, float t) {
+  public void turn(float t) {
     float u = u_line + t;
-    motor.setPower(clamp(u, -100, 100));
+    this.motor.setPower(clamp(u, -100, 100));
   }
 
   public int clamp(float value, float lower, float upper) {
@@ -220,17 +220,15 @@ class LightPID {
 
   public void run() {
     while (true) {
-      // int value = light.getLightValue();
-      // int error = getError(value);
-      //
-      // float t = (value < 57)
-      //   ? proportional(error) +
-      //     integral(error) +
-      //     derivative(error)
-      //   : 25;
-      // turn(motor, t);
-      //
-      // prev_error = error;
+      int value = sensor.getLightValue();
+      int error = getError(value);
+
+      turn((value < this.white)
+        ? proportional(error) + integral(error) + derivative(error)
+        : 25
+      );
+
+      prev_error = error;
     }
   }
 }
@@ -239,27 +237,27 @@ class Align implements IState {
 
   NXTMotor lUnregulatedMotor;
   NXTMotor rUnregulatedMotor;
-  LightPID lLightPID;
-  LightPID rLightPID;
+  ColorPID lColorPID;
+  ColorPID rColorPID;
 
   public void run() {
-    rLightPID.run();
-    lLightPID.run();
+    rColorPID.run();
+    lColorPID.run();
   }
 
-  public void Align() {
+  public Align() {
     lUnregulatedMotor = new NXTMotor(MotorPort.A);
     rUnregulatedMotor = new NXTMotor(MotorPort.C);
 
-    lLightPID = new LightPID(
-      new LightSensor(SensorPort.S1, true),
+    lColorPID = new ColorPID(
+      new ColorSensor(SensorPort.S1),
       lUnregulatedMotor,
       49,
       60
     );
 
-    rLightPID = new LightPID(
-      new LightSensor(SensorPort.S4, true),
+    rColorPID = new ColorPID(
+      new ColorSensor(SensorPort.S4),
       rUnregulatedMotor,
       55,
       60
