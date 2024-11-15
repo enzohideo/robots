@@ -169,18 +169,18 @@ class Claw {
 //
 
 class ColorPID {
-  public static float u_line = 0;
-  public static float k_p = 2.5f;
-  public static float k_i = 0f;
-  public static float k_d = 1f;
+  public static float uLine = 0;
+  public static float kP = 2.5f;
+  public static float kI = 0f;
+  public static float kD = 1f;
 
   ColorSensor sensor;
   NXTMotor motor;
 
   public int white = 60;
   public int middle = 49;
-  public int prev_error = 0;
-  public int acc_error = 0;
+  public int prevError = 0;
+  public int accError = 0;
 
   public ColorPID(ColorSensor sensor, NXTMotor motor, int middle, int white) {
     this.sensor = sensor;
@@ -195,22 +195,22 @@ class ColorPID {
 
   public float proportional(int error) {
     // Stop motor before crossing the line
-    float tmp = k_p * error;
+    float tmp = kP * error;
     return tmp < 0 ? error : tmp;
   }
 
   public float integral(int error) {
-    if (acc_error * error < 0) acc_error = 0;
-    acc_error = acc_error + error;
-    return k_i * acc_error;
+    if (accError * error < 0) accError = 0;
+    accError = accError + error;
+    return kI * accError;
   }
 
   public float derivative(int error) {
-    return k_d * (error - prev_error);
+    return kD * (error - prevError);
   }
 
   public void turn(float t) {
-    float u = u_line + t;
+    float u = uLine + t;
     this.motor.setPower(clamp(u, -100, 100));
   }
 
@@ -228,7 +228,7 @@ class ColorPID {
         : 25
       );
 
-      prev_error = error;
+      prevError = error;
     }
   }
 }
