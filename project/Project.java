@@ -235,8 +235,8 @@ class ColorPID {
 
 class Align implements IState {
 
-  NXTMotor lUnregulatedMotor;
-  NXTMotor rUnregulatedMotor;
+  NXTMotor lMotor;
+  NXTMotor rMotor;
   ColorPID lColorPID;
   ColorPID rColorPID;
 
@@ -245,20 +245,20 @@ class Align implements IState {
     lColorPID.run();
   }
 
-  public Align() {
-    lUnregulatedMotor = new NXTMotor(MotorPort.A);
-    rUnregulatedMotor = new NXTMotor(MotorPort.C);
+  public Align(NXTMotor lMotor, NXTMotor rMotor) {
+    this.lMotor = lMotor;
+    this.rMotor = rMotor;
 
     lColorPID = new ColorPID(
       new ColorSensor(SensorPort.S1),
-      lUnregulatedMotor,
+      lMotor,
       49,
       60
     );
 
     rColorPID = new ColorPID(
       new ColorSensor(SensorPort.S4),
-      rUnregulatedMotor,
+      rMotor,
       55,
       60
     );
@@ -266,25 +266,33 @@ class Align implements IState {
 }
 
 public class Project {
-  static NXTRegulatedMotor lMotor = Motor.A;
-  static NXTRegulatedMotor rMotor = Motor.C;
+  static MotorPort lMotorPort = MotorPort.A;
+  static MotorPort rMotorPort = MotorPort.C;
+  static NXTRegulatedMotor lRegulatedMotor = Motor.A;
+  static NXTRegulatedMotor rRegulatedMotor = Motor.C;
   static NXTRegulatedMotor clawMotor = Motor.B;
+  static SensorPort ultrasonicSensorPort = SensorPort.S1;
 
   static Align align;
-  // static Sonar sonar;
+  static Sonar sonar;
   static Claw claw;
 
   public static void main(String[] args) {
-    Button.waitForAnyPress();
-    align = new Align();
-    // sonar = new Sonar();
+    // UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(ultrasonicSensorPort);
+    NXTMotor lMotor = new NXTMotor(lMotorPort);
+    NXTMotor rMotor = new NXTMotor(rMotorPort);
+
+    align = new Align(lMotor, rMotor);
+    // sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     // claw = new Claw(clawMotor);
-//
-    // while(true) {
+
+    Button.waitForAnyPress();
+
+    while(true) {
       align.run();
       // sonar.run();
       // align.run();
       // claw.run(true);
-    // }
+    }
   }
 }
