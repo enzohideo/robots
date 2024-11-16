@@ -8,6 +8,7 @@
 
   outputs =
     {
+      self,
       systems,
       nixpkgs,
       lejos,
@@ -18,19 +19,43 @@
       eachSystem = lib.genAttrs (import systems);
     in
     {
-      devShell = eachSystem (
+      packages = eachSystem (
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
         in
-        lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
-          buildInputs =
-            prevAttrs.buildInputs
-            ++ (with pkgs; [
-              jdt-language-server
-            ]);
-          CLASSPATH = "${prevAttrs.NXJ_HOME}/lib/nxt/classes.jar";
-        })
+        {
+          vscodium = (
+            pkgs.vscode-with-extensions.override {
+              vscode = pkgs.vscodium;
+              vscodeExtensions = with pkgs.vscode-extensions; [
+                redhat.java
+              ];
+            }
+          );
+        }
+      );
+
+      devShells = eachSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          vscodium = self.packages.${system}.vscodium;
+        in
+        {
+          default = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
+            buildInputs = prevAttrs.buildInputs ++ [
+              pkgs.jdt-language-server
+            ];
+            CLASSPATH = "${prevAttrs.NXJ_HOME}/lib/nxt/classes.jar";
+          });
+          vscodium = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
+            buildInputs = prevAttrs.buildInputs ++ [
+              vscodium
+              pkgs.jdk
+            ];
+          });
+        }
       );
     };
 }
