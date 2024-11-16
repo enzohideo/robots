@@ -29,6 +29,7 @@
             ++ (with pkgs; [
               jdt-language-server
             ]);
+          CLASSPATH = "${prevAttrs.NXJ_HOME}/lib/nxt/classes.jar";
         })
       );
     };
