@@ -1,2 +1,4 @@
 *.class
 *.nxj
+.vscode
+result
