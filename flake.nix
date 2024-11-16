@@ -40,21 +40,42 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          vscodium = self.packages.${system}.vscodium;
+          lejos-home = lejos.packages.${system}.lejos-nxj;
+          lejos-nxj-classes = "${lejos-home}/lib/nxt/classes.jar";
         in
         {
           default = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
             buildInputs = prevAttrs.buildInputs ++ [
               pkgs.jdt-language-server
             ];
-            CLASSPATH = "${prevAttrs.NXJ_HOME}/lib/nxt/classes.jar";
+            CLASSPATH = lejos-nxj-classes;
           });
-          vscodium = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
-            buildInputs = prevAttrs.buildInputs ++ [
-              vscodium
-              pkgs.jdk
-            ];
-          });
+          vscodium = lejos.devShells.${system}.lejos-nxj.overrideAttrs (
+            prevAttrs:
+            let
+              vscodium = self.packages.${system}.vscodium;
+              vscode-settings = ''
+                {
+                  "java.project.referencedLibraries": [
+                    "${lejos-nxj-classes}"
+                  ]
+                }
+              '';
+            in
+            {
+              buildInputs = prevAttrs.buildInputs ++ [
+                vscodium
+                pkgs.jdk
+              ];
+              shellHook =
+                prevAttrs.shellHook
+                + ''
+                  mkdir -pv ".vscode"
+                  [ ! -f .vscode/settings.json ] \
+                    && printf '${vscode-settings}' > .vscode/settings.json
+                '';
+            }
+          );
         }
       );
     };
