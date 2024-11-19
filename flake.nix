@@ -45,10 +45,12 @@
         in
         {
           default = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
+            CLASSPATH = lejos-nxj-classes;
+          });
+          jdtls = self.devShells.${system}.default.overrideAttrs (prevAttrs: {
             buildInputs = prevAttrs.buildInputs ++ [
               pkgs.jdt-language-server
             ];
-            CLASSPATH = lejos-nxj-classes;
           });
           vscodium = lejos.devShells.${system}.lejos-nxj.overrideAttrs (
             prevAttrs:
