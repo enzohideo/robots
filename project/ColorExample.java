@@ -3,6 +3,7 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.robotics.Color;
+import java.lang.String;
 
 public class ColorExample {
   static ColorSensor colorSensor;
@@ -15,7 +16,9 @@ public class ColorExample {
 
     while(true) {
       Color color = colorSensor.getColor();
-      LCD.drawString(color.toString(), 0, 1);
+      LCD.drawString("red: " + Integer.toString(color.getRed()), 0, 1);
+      LCD.drawString("green: " + Integer.toString(color.getGreen()), 0, 2);
+      LCD.drawString("blue: " + Integer.toString(color.getBlue()), 0, 3);
       try {
         Thread.sleep(1000);
       } catch(InterruptedException error) {
