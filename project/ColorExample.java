@@ -3,7 +3,6 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.robotics.Color;
-import java.lang.String;
 
 public class ColorExample {
   static ColorSensor colorSensor;
