@@ -16,6 +16,11 @@ public class ColorExample {
     while(true) {
       Color color = colorSensor.getColor();
       LCD.drawString(color.toString(), 0, 1);
+      try {
+        Thread.sleep(1000);
+      } catch(InterruptedException error) {
+        LCD.drawString("failed to sleep", 0, 1);
+      }
     }
   }
 }
