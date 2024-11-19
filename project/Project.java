@@ -359,7 +359,6 @@ class GeneratePath implements IState {
   }
 }
 
-
 class ColorPID {
   public static float uLine = 0;
   public static float kP = 2.5f;
@@ -369,20 +368,53 @@ class ColorPID {
   ColorSensor sensor;
   NXTMotor motor;
 
-  public int white = 60;
-  public int middle = 49;
+  public class RGB {
+    
+    public int red;
+    public int green;
+    public int blue;
+
+    public RGB(int red, int green, int blue) {
+      this.red = red;
+      this.green = green;
+      this.blue = blue;
+    }
+
+    public boolean compare_colors(RGB color) {
+      if (color.red < this.red || color.green < this.green || color.blue < this.blue) {
+        return true;
+      }
+      return false;
+    }
+
+    public double color_distance(RGB color) {
+      int diff_red = color.red - this.red;
+      int diff_green = color.green - this.green;
+      int diff_blue = color.blue - this.blue;
+      return (int) Math.sqrt(Math.pow(diff_red, 2) + Math.pow(diff_green, 2) + Math.pow(diff_blue, 2));
+    }
+  }
+
+  //public int red_white = 60;
+  //public int green_white = 60;
+  //public int blue_white = 60;
+  public RGB middle;
+  public RGB white;
+  //public int middle_red = 49;
+  //private int middle_green = 49;
+  //private int middle_blue = 49;
   public int prevError = 0;
   public int accError = 0;
 
-  public ColorPID(ColorSensor sensor, NXTMotor motor, int middle, int white) {
+  public ColorPID(ColorSensor sensor, NXTMotor motor, RGB middle, RGB white) {
     this.sensor = sensor;
     this.motor = motor;
     this.middle = middle;
     this.white = white;
   }
 
-  public int getError(int value) {
-    return value - middle;
+  public int getError(RGB value) {
+    return (int) value.color_distance(middle);
   }
 
   public float proportional(int error) {
@@ -410,11 +442,32 @@ class ColorPID {
     return (int) (value > upper ? upper : (value < lower ? lower : value));
   }
 
-  public void run() {
-    int value = sensor.getLightValue();
+  //public enum ColorEnum {
+  //  RED, BLUE, GREEN, RGB
+  //}
+
+  public void run(ColorEnum color) {
+    ColorSensor.Color color = this.sensor.getColor();
+    RGB value = RGB(color.getRed(), color.getGreen(), color.getBlue());
+    //int red = value.getRed();
+    //int blue = value.getBlue();
+    //int green = value.getGreen();
+    /* 
+    switch(color) {
+      case RED:
+        value = this.sensor.getRed();
+      case BLUE:
+        value = this.sensor.getBlue();
+      case GREEN:
+        value = this.sensor.getGreen();
+      case RGB:
+        value = this.sensor.getColor();
+    }*/
+    //int value = sensor.getLightValue();
+    
     int error = getError(value);
 
-    turn((value < this.white)
+    turn((value.color_distance(white) < 0.1)
       ? proportional(error) + integral(error) + derivative(error)
       : 25
     );
@@ -432,8 +485,8 @@ class Align implements IState {
 
   public void run() {
     while(true) {
-      rColorPID.run();
-      lColorPID.run();
+      rColorPID.run(ColorPID.ColorEnum.BLUE);
+      lColorPID.run(ColorPID.ColorEnum.BLUE);
     }
   }
 
@@ -442,7 +495,7 @@ class Align implements IState {
     this.rMotor = rMotor;
 
     lColorPID = new ColorPID(
-      new ColorSensor(SensorPort.S1),
+      new ColorSensor(SensorPort.S3),
       lMotor,
       49,
       60
@@ -465,7 +518,7 @@ public class Project {
   static MotorPort clawMotorPort = MotorPort.B;
 
   static Align align;
-  static Sonar sonar;
+  //static Sonar sonar;
   static Claw claw;
 
   public static void main(String[] args) {
@@ -479,8 +532,8 @@ public class Project {
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
 
     align = new Align(lMotor, rMotor);
-    sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
-    claw = new Claw(clawMotor);
+    //sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
+    //claw = new Claw(clawMotor);
 
     Button.waitForAnyPress();
 
