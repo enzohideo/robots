@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;
