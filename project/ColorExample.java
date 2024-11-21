@@ -12,7 +12,6 @@ public class ColorExample {
     colorSensor.setFloodlight(Color.WHITE);
 
     LCD.drawString("Color Sensor", 0, 0);
-    Button.waitForAnyPress();
 
     while(true) {
       Color color = colorSensor.getColor();
