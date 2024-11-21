@@ -151,23 +151,28 @@ class GeneratePath implements IState {
   //   }
   // }
 
+  private DifferentialPilot pilot;
   private boolean[][] adjacency_matrix;
   private Waypoint[] nodes;
   private List<Waypoint> path;
+  private List<Waypoint> reversedPath;
 
-  public GeneratePath() {
+  public GeneratePath(DifferentialPilot pilot) {
+    this.pilot = pilot;
     this.nodes = init_list_of_nodes();
     this.adjacency_matrix = init_adjacency_matrix();
   }
 
   public static Waypoint[] init_list_of_nodes() {
     Waypoint[] points = new Waypoint[25];
+    double initialValue = 15.0;
 
     for (int i = 0; i < 5; ++i) {
       for (int j = 0; j < 5; ++j) {
-        points[i*5 + j] = new Waypoint((i + 1) * 15.0, (j + 1) * 15.0);
+        points[i*5 + j] = new Waypoint(initialValue + j * 30.0, initialValue + i * 30.0);
       }
     }
+
     return points;
   }
 
@@ -360,12 +365,63 @@ class GeneratePath implements IState {
     return reversedPath;
   }
 
+  public void ReversePath(List<Waypoint> path) {
+    List<Waypoint> reversedPath = new ArrayList<Waypoint>();
+    for (int i = path.size() - 1; i >= 0; i--) {
+      reversedPath.add(path.get(i));
+    }
+    this.reversedPath = reversedPath;
+  }
+
   public void WaypointsPath(List<Integer> nodes) {
     List<Waypoint> path = new ArrayList<Waypoint>();
-    for (int i = 0; i < path.size(); i++) {
+    for (int i = 0; i < nodes.size(); i++) {
       path.add(this.nodes[nodes.get(i)]);
     }
     this.path = path;
+    ReversePath(path);
+  }
+
+  public void calculateRoute(int initialNode, int finalNode) {
+    List<Integer> index_path = dijkstra(this.adjacency_matrix, initialNode, finalNode);
+    WaypointsPath(index_path); 
+  }
+
+  public int mapColor2Index(int color) {
+    switch(color) {
+      case 0: // school
+        return 5;
+      case 1: // city hall
+        return 7;
+      case 2: // library 
+        return 9;
+      case 3: // bakery
+        return 15;
+      case 4: // drugstore
+        return 17;
+      case 5: // museum
+        return 19;
+      }
+    return -1;
+  }
+
+  public void travel(DifferentialPilot pilot, List<Waypoint> listPath) {
+    Navigator navigator = new Navigator(pilot);
+    List<Waypoint> path = new ArrayList<Waypoint>();
+    for (int i = 0; i < listPath.size(); i++) {
+      navigator.addWaypoint(listPath.get(i));
+    }
+    navigator.followPath();
+  }
+
+  public void go() {
+    int final_index = mapColor2Index(4);
+    int initial_index = 0;
+    open_drugstore();
+    calculateRoute(initial_index, final_index);
+    travel(this.pilot, this.path);
+    close_drugstore();
+    LCD.drawString("FINISHED", 0, 0);
   }
 
   public void run() {
@@ -469,9 +525,10 @@ public class Project {
   static Align align;
   static Sonar sonar;
   static Claw claw;
+  static GeneratePath generatePath;
 
-  static double wheelDiameter = 5.6;
-  static double trackWidth = 11.2;
+  static double wheelDiameter = 6.0;
+  static double trackWidth = 12.0;
 
   static void sleep(long millis) {
     try {
@@ -518,7 +575,11 @@ public class Project {
     align = new Align(lColorPID, rColorPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
+    generatePath = new GeneratePath(pilot);
 
+    Button.waitForAnyPress();
+
+    generatePath.go();
     Button.waitForAnyPress();
 
     while(true) {
