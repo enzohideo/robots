@@ -383,18 +383,16 @@ class ColorPID {
   NXTMotor motor;
 
   public int white = 60;
-  public int middle = 49;
   public int prevError = 0;
   public int accError = 0;
 
-  public ColorPID(ColorSensor sensor, NXTMotor motor, int middle, int white) {
+  public ColorPID(ColorSensor sensor, NXTMotor motor, int white) {
     this.sensor = sensor;
     this.motor = motor;
-    this.middle = middle;
     this.white = white;
   }
 
-  public int getError(int value) {
+  public int getError(int value, int middle) {
     return value - middle;
   }
 
@@ -423,9 +421,9 @@ class ColorPID {
     return (int) (value > upper ? upper : (value < lower ? lower : value));
   }
 
-  public void run() {
+  public void run(int middle) {
     int value = sensor.getLightValue();
-    int error = getError(value);
+    int error = getError(value, middle);
 
     turn((value < this.white)
       ? proportional(error) + integral(error) + derivative(error)
@@ -436,17 +434,17 @@ class ColorPID {
   }
 }
 
-class Align implements IState {
+class Align {
 
   NXTMotor lMotor;
   NXTMotor rMotor;
   ColorPID lColorPID;
   ColorPID rColorPID;
 
-  public void run() {
+  public void run(int lMiddle, int rMiddle) {
     while(true) {
-      rColorPID.run();
-      lColorPID.run();
+      lColorPID.run(lMiddle);
+      rColorPID.run(rMiddle);
     }
   }
 
@@ -460,14 +458,12 @@ class Align implements IState {
     lColorPID = new ColorPID(
       lColorSensor,
       lMotor,
-      49,
       60
     );
 
     rColorPID = new ColorPID(
       rColorSensor,
       rMotor,
-      55,
       60
     );
   }
@@ -539,7 +535,7 @@ public class Project {
       pilot.travel(-10);
       pilot.rotate(89);
 
-      align.run();
+      align.run(49, 55);
 
       pilot.rotate(-89);
     }
