@@ -437,19 +437,22 @@ class Align implements IState {
     }
   }
 
-  public Align(NXTMotor lMotor, NXTMotor rMotor) {
+  public Align(
+    ColorSensor lColorSensor, NXTMotor lMotor,
+    ColorSensor rColorSensor, NXTMotor rMotor
+  ) {
     this.lMotor = lMotor;
     this.rMotor = rMotor;
 
     lColorPID = new ColorPID(
-      new ColorSensor(SensorPort.S1),
+      lColorSensor,
       lMotor,
       49,
       60
     );
 
     rColorPID = new ColorPID(
-      new ColorSensor(SensorPort.S4),
+      rColorSensor,
       rMotor,
       55,
       60
@@ -464,6 +467,9 @@ public class Project {
   static MotorPort rMotorPort = MotorPort.C;
   static MotorPort clawMotorPort = MotorPort.B;
 
+  static SensorPort lColorSensorPort = SensorPort.S3;
+  static SensorPort rColorSensorPort = SensorPort.S4;
+
   static Align align;
   static Sonar sonar;
   static Claw claw;
@@ -474,11 +480,14 @@ public class Project {
     NXTMotor lMotor = new NXTMotor(lMotorPort);
     NXTMotor rMotor = new NXTMotor(rMotorPort);
 
+    ColorSensor lColorSensor = new ColorSensor(lColorSensorPort);
+    ColorSensor rColorSensor = new ColorSensor(rColorSensorPort);
+
     NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(lMotorPort);
     NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(rMotorPort);
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
 
-    align = new Align(lMotor, rMotor);
+    align = new Align(lColorSensor, lMotor, rColorSensor, rMotor);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
 
