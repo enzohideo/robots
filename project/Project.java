@@ -10,6 +10,8 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Waypoint;
 
 interface IState {
@@ -485,6 +487,9 @@ public class Project {
   static Sonar sonar;
   static Claw claw;
 
+  static double wheelDiameter = 5.6;
+  static double trackWidth = 11.2;
+
   static void sleep(long millis) {
     try {
       Thread.sleep(millis);
@@ -506,6 +511,10 @@ public class Project {
     NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(rMotorPort);
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
 
+    DifferentialPilot pilot = new DifferentialPilot(
+      wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, true
+    );
+
     align = new Align(lColorSensor, lMotor, rColorSensor, rMotor);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
@@ -513,10 +522,26 @@ public class Project {
     Button.waitForAnyPress();
 
     while(true) {
-      align.run();
-      // sonar.run();
+      LCD.drawString("START", 0, 0);
       // align.run();
-      // claw.run(true);
+
+      Sonar.Pipe pipe = sonar.run();
+      LCD.drawString("PIPE FOUND: " + pipe.name(), 0, 1);
+      LCD.drawString("WAITING", 0, 0);
+
+      sleep(1000);
+
+      pilot.rotate(89);
+      pilot.travel(5);
+
+      claw.run(true);
+
+      pilot.travel(-10);
+      pilot.rotate(89);
+
+      align.run();
+
+      pilot.rotate(-89);
     }
   }
 }
