@@ -24,9 +24,9 @@ class Sonar {
   private UltrasonicSensor sonar;
   private NXTMotor lMotor;
   private NXTMotor rMotor;
-  private float shortPipeThreshold = 20.0f;
+  private float shortPipeThreshold = 30.0f;
   private float tallPipeThreshold = 15.0f;
-  private int power = 10;
+  private int power = 25;
   private int samplingPeriod = 100;
 
   public Sonar(UltrasonicSensor sonar, NXTMotor lMotor, NXTMotor rMotor) {
