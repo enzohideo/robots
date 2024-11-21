@@ -472,7 +472,7 @@ class Align implements IState {
 }
 
 public class Project {
-  static SensorPort ultrasonicSensorPort = SensorPort.S1;
+  static SensorPort ultrasonicSensorPort = SensorPort.S2;
 
   static MotorPort lMotorPort = MotorPort.A;
   static MotorPort rMotorPort = MotorPort.C;
