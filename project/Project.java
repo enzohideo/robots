@@ -485,6 +485,14 @@ public class Project {
   static Sonar sonar;
   static Claw claw;
 
+  static void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      LCD.drawString("Failed to sleep", 0, 0);
+    }
+  }
+
   public static void main(String[] args) {
     UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(ultrasonicSensorPort);
 
