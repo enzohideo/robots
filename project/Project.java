@@ -435,9 +435,6 @@ class ColorPID {
 }
 
 class Align {
-
-  NXTMotor lMotor;
-  NXTMotor rMotor;
   ColorPID lColorPID;
   ColorPID rColorPID;
 
@@ -449,23 +446,11 @@ class Align {
   }
 
   public Align(
-    ColorSensor lColorSensor, NXTMotor lMotor,
-    ColorSensor rColorSensor, NXTMotor rMotor
+    ColorPID lColorPID,
+    ColorPID rColorPID
   ) {
-    this.lMotor = lMotor;
-    this.rMotor = rMotor;
-
-    lColorPID = new ColorPID(
-      lColorSensor,
-      lMotor,
-      60
-    );
-
-    rColorPID = new ColorPID(
-      rColorSensor,
-      rMotor,
-      60
-    );
+    this.lColorPID = lColorPID;
+    this.rColorPID = rColorPID;
   }
 }
 
@@ -511,7 +496,19 @@ public class Project {
       wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, true
     );
 
-    align = new Align(lColorSensor, lMotor, rColorSensor, rMotor);
+    ColorPID lColorPID = new ColorPID(
+      lColorSensor,
+      lMotor,
+      500
+    );
+
+    ColorPID rColorPID = new ColorPID(
+      rColorSensor,
+      rMotor,
+      500
+    );
+
+    align = new Align(lColorPID, rColorPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
 
