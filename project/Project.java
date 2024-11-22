@@ -493,8 +493,13 @@ public class Project {
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
 
     DifferentialPilot pilot = new DifferentialPilot(
+      wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, false
+    );
+
+    DifferentialPilot reversePilot = new DifferentialPilot(
       wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, true
     );
+    Navigator reverseNavigator = new Navigator(reversePilot);
 
     ColorPID lColorPID = new ColorPID(
       lColorSensor,
