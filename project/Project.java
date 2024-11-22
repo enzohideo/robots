@@ -12,6 +12,7 @@ import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
+import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 
 interface IState {
@@ -521,25 +522,38 @@ public class Project {
 
     while(true) {
       LCD.drawString("START", 0, 0);
-      // align.run();
 
       Sonar.Pipe pipe = sonar.run();
-      LCD.drawString("PIPE FOUND: " + pipe.name(), 0, 1);
-      LCD.drawString("WAITING", 0, 0);
+      LCD.drawString("PIPE: " + pipe.name(), 0, 1);
 
+      LCD.drawString("WAITING", 0, 0);
       sleep(1000);
 
-      pilot.rotate(89);
-      pilot.travel(5);
+      pilot.quickStop();
+      pilot.setRotateSpeed(40);
+      pilot.setTravelSpeed(5);
+      pilot.rotate(89, false);
+      pilot.travel(5, false);
 
       claw.run(true);
+      claw.run(false);
 
       pilot.travel(-10);
       pilot.rotate(89);
 
-      align.run(49, 55);
+      LCD.drawString("ALIGN W/ RED", 0, 0);
+      align.run(300, 300); // TODO: Improve red line callibration
 
+      double y = trackWidth / 2;
+      pilot.travel(-y);
       pilot.rotate(-89);
+
+      LCD.drawString("ALIGN W/ BLUE", 0, 0);
+      align.run(300, 300); // TODO: Callibrate for blue line
+
+      reverseNavigator.getPoseProvider().setPose(new Pose(0, (float) y, 0));
+      LCD.drawString("WAITING", 0, 0);
+      sleep(1000);
     }
   }
 }
