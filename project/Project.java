@@ -77,7 +77,7 @@ class Claw {
 
   public Claw(NXTRegulatedMotor motor) {
     this.motor = motor;
-    this.motor.setSpeed(120);
+    this.motor.setSpeed(80);
   }
 
   public void run(boolean close) {
@@ -376,7 +376,7 @@ class GeneratePath implements IState {
 
 class ColorPID {
   public static float uLine = 0;
-  public static float kP = 2.5f;
+  public static float kP = 2.0f;
   public static float kI = 0f;
   public static float kD = 1f;
 
@@ -394,7 +394,8 @@ class ColorPID {
   }
 
   public int getError(int value, int middle) {
-    return value - middle;
+    LCD.drawString("error: " + value + " " + middle, 0, 0);
+    return (int) ((value - middle) / 1024f * 100f);
   }
 
   public float proportional(int error) {
@@ -423,7 +424,7 @@ class ColorPID {
   }
 
   public void run(int middle) {
-    int value = sensor.getLightValue();
+    int value = sensor.getRawLightValue();
     int error = getError(value, middle);
 
     turn((value < this.white)
