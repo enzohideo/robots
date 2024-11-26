@@ -1,5 +1,5 @@
 PROGRAM := Project
-PROGRAM_DEPS := $(addprefix align/,Align.java ColorPID.java)
+PROGRAM_DEPS := $(addprefix align/,Align.java ColorPID.java LightPID.java)
 PROGRAM_DEPS += $(addprefix claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix dijkstra/,Dijkstra.java PathFinder.java)
 PROGRAM_DEPS += $(addprefix sonar/,Sonar.java)

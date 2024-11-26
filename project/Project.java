@@ -1,5 +1,5 @@
 import align.Align;
-import align.ColorPID;
+import align.LightPID;
 import claw.Claw;
 import dijkstra.PathFinder;
 import lejos.nxt.Button;
@@ -10,6 +10,7 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
+import lejos.nxt.LightSensor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import sonar.Sonar;
@@ -21,8 +22,8 @@ public class Project {
   static MotorPort rMotorPort = MotorPort.C;
   static MotorPort clawMotorPort = MotorPort.B;
 
-  static SensorPort lColorSensorPort = SensorPort.S3;
-  static SensorPort rColorSensorPort = SensorPort.S4;
+  static SensorPort lLightSensorPort = SensorPort.S3;
+  static SensorPort rLightSensorPort = SensorPort.S4;
   static SensorPort clawColorSensorPort = SensorPort.S1;
 
   static Align align;
@@ -47,8 +48,8 @@ public class Project {
     NXTMotor lMotor = new NXTMotor(lMotorPort);
     NXTMotor rMotor = new NXTMotor(rMotorPort);
 
-    ColorSensor lColorSensor = new ColorSensor(lColorSensorPort);
-    ColorSensor rColorSensor = new ColorSensor(rColorSensorPort);
+    LightSensor lLightSensor = new LightSensor(lLightSensorPort);
+    LightSensor rLightSensor = new LightSensor(rLightSensorPort);
     ColorSensor clawColorSensor = new ColorSensor(clawColorSensorPort);
 
     NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(lMotorPort);
@@ -65,23 +66,24 @@ public class Project {
     // );
     // Navigator reverseNavigator = new Navigator(reversePilot);
 
-    ColorPID lColorPID = new ColorPID(
-      lColorSensor,
+    LightPID lLightPID = new LightPID(
+      lLightSensor,
       lMotor,
-      500
+      60
     );
 
-    ColorPID rColorPID = new ColorPID(
-      rColorSensor,
+    LightPID rLightPID = new LightPID(
+      rLightSensor,
       rMotor,
-      500
+      60
     );
 
-    align = new Align(lColorPID, rColorPID);
+    align = new Align(lLightPID, rLightPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor, clawColorSensor);
     pathFinder = new PathFinder(navigator);
 
+    align.run(56, 45);
     Button.waitForAnyPress();
 
     while(true) {

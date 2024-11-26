@@ -1,21 +1,21 @@
 package align;
 
 public class Align {
-  ColorPID lColorPID;
-  ColorPID rColorPID;
+  LightPID lLightPID;
+  LightPID rLightPID;
 
   public void run(int lMiddle, int rMiddle) {
     while(true) {
-      lColorPID.run(lMiddle);
-      rColorPID.run(rMiddle);
+      lLightPID.run(lMiddle);
+      rLightPID.run(rMiddle);
     }
   }
 
   public Align(
-    ColorPID lColorPID,
-    ColorPID rColorPID
+    LightPID lLightPID,
+    LightPID rLightPID
   ) {
-    this.lColorPID = lColorPID;
-    this.rColorPID = rColorPID;
+    this.lLightPID = lLightPID;
+    this.rLightPID = rLightPID;
   }
 }
