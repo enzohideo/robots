@@ -1,6 +1,6 @@
 PROGRAM := Project
 PROGRAM_DEPS := Align.java Claw.java Sonar.java
-PROGRAM_DEPS += dijkstra/Dijkstra.java PathFinder.java
+PROGRAM_DEPS += $(addprefix dijkstra/,Dijkstra.java PathFinder.java)
 
 TEST_DIR := test
 TEST := $(TEST_DIR)/Test

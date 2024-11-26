@@ -1,3 +1,4 @@
+import dijkstra.PathFinder;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;

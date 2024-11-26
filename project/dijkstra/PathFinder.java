@@ -1,11 +1,12 @@
-import dijkstra.Dijkstra;
+package dijkstra;
+
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 
-class PathFinder {
+public class PathFinder {
   private Navigator navigator;
   private boolean[][] adjMatrix;
   private Waypoint[] nodes;
