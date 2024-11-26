@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;
@@ -92,64 +88,6 @@ class Claw {
 }
 
 class PathFinder {
-
-  //private boolean[][] adjacency_matrix;
-
-
-  // class Node {
-  //   public static enum Wall {
-  //     RIGHT,
-  //     UP,
-  //     LEFT,
-  //     DOWN
-  //   }
-
-  //   static int wall_to_state(Wall wall) {
-  //     switch(wall) {
-  //       case RIGHT:
-  //         return 1;
-  //       case UP:
-  //         return 1 << 2;
-  //       case LEFT:
-  //         return 1 << 4;
-  //       case DOWN:
-  //         return 1 << 6;
-  //     }
-  //     return 0;
-  //   }
-
-  //   static byte create_state(
-  //     boolean right,
-  //     boolean up,
-  //     boolean left,
-  //     boolean down
-  //   ) {
-  //     byte state = 0;
-
-  //     if (right) state += wall_to_state(Wall.RIGHT);
-  //     if (up) state += wall_to_state(Wall.UP);
-  //     if (left) state += wall_to_state(Wall.LEFT);
-  //     if (down) state += wall_to_state(Wall.DOWN);
-
-  //     return state;
-  //   }
-
-  //   public boolean is_closed() {
-
-  //   }
-
-  //   private byte state;
-
-  //   public Node(
-  //     boolean right,
-  //     boolean up,
-  //     boolean left,
-  //     boolean down
-  //   ) {
-  //     state = create_state(right, up, left, down);
-  //   }
-  // }
-
   private Navigator navigator;
   private boolean[][] adjMatrix;
   private Waypoint[] nodes;
@@ -290,79 +228,10 @@ class PathFinder {
     this.adjMatrix[8][9] = true;
   }
 
-  public static List<Integer> dijkstra(boolean[][] adjMatrix, int start, int end) {
-    int n = adjMatrix.length;
-
-    // Distâncias mínimas inicializadas com infinito
-    int[] distances = new int[n];
-    Arrays.fill(distances, Integer.MAX_VALUE);
-    distances[start] = 0;
-
-    // Array para rastrear os vértices anteriores no menor caminho
-    int[] previous = new int[n];
-    Arrays.fill(previous, -1);
-
-    // Conjunto de vértices visitados
-    boolean[] visited = new boolean[n];
-
-    List<Integer> queue = new ArrayList<>();
-    queue.add(start);
-
-    while (!queue.isEmpty()) {
-      // Encontrar o vértice com a menor distância na lista
-      int current = -1;
-      int minDistance = Integer.MAX_VALUE;
-      for (int vertex : queue) {
-        if (distances[vertex] >= minDistance) continue;
-        minDistance = distances[vertex];
-        current = vertex;
-      }
-
-      // Remover o vértice atual da lista
-      queue.remove(current);
-
-      // Se o vértice já foi visitado, ignorá-lo
-      if (visited[current]) continue;
-      visited[current] = true;
-
-      // Verificar todos os vizinhos
-      for (int neighbor = 0; neighbor < n; neighbor++) {
-        if (adjMatrix[current][neighbor] && !visited[neighbor]) {
-          int newDist = distances[current] + 1; // Peso uniforme (1)
-          if (newDist < distances[neighbor]) {
-            distances[neighbor] = newDist;
-            previous[neighbor] = current;
-            if (!queue.contains(neighbor)) {
-              queue.add(neighbor);
-            }
-          }
-        }
-      }
-    }
-
-    List<Integer> path = new ArrayList<>();
-    for (int at = end; at != -1; at = previous[at]) {
-      path.add(at);
-    }
-
-    if (path.isEmpty() || path.get(0) != start) {
-      return new ArrayList<>();
-    }
-
-    for (int i = 0; i < path.size() / 2; ++i) {
-      int j = path.size() - i - 1;
-      path.set(i, path.get(i) ^ path.get(j));
-      path.set(j, path.get(i) ^ path.get(j));
-      path.set(i, path.get(i) ^ path.get(j));
-    }
-
-    return path;
-  }
-
   public Path findRoute(int initialNode, int finalNode) {
     Path waypoints = new Path();
 
-    for (int index : dijkstra(this.adjMatrix, initialNode, finalNode)) {
+    for (int index : Dijkstra.findRoute(this.adjMatrix, initialNode, finalNode)) {
       waypoints.add(this.nodes[index]);
     }
 
@@ -587,7 +456,7 @@ public class Project {
       align.run(300, 300); // TODO: Callibrate for blue line
 
       pilot.rotate(89);
-      pathFinder.run(0, y); // TODO: decide starting coordinates
+      pathFinder.run(0, (float) y); // TODO: decide starting coordinates
 
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);
