@@ -1,0 +1,13 @@
+diff --git a/pccomms/src/lejos/pc/comm/NXTCommandConnector.java b/pccomms/src/lejos/pc/comm/NXTCommandConnector.java
+index 4c7aa31..367f03c 100644
+--- a/pccomms/src/lejos/pc/comm/NXTCommandConnector.java
++++ b/pccomms/src/lejos/pc/comm/NXTCommandConnector.java
+@@ -43,7 +43,7 @@ public class NXTCommandConnector {
+ 				currentNXTCommand = new NXTCommand(nxtComm);
+ 			} catch (IOException ioe) {
+ 				System.err.println("Failed to open connection to the NXT");
+-				System.exit(1);
++				// System.exit(1);
+ 			}
+ 		}
+ 		return currentNXTCommand;

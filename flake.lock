@@ -8,11 +8,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1731635106,
-        "narHash": "sha256-gYih3mPARw++Ph+TiUy/Q4OgiIjoTsPnFhj2gRfh2Uo=",
+        "lastModified": 1732594527,
+        "narHash": "sha256-0mn+lfFcYBSagGOs/qHXJb0UuB/AKAyZGuekgahvC5E=",
         "owner": "enzohideo",
         "repo": "lejos-nix",
-        "rev": "ef72869f3bc3bcb5602a105b688717c0f6d480b3",
+        "rev": "8d6f93b53715aedd4e3819b8e26024e0a9336c1e",
         "type": "github"
       },
       "original": {

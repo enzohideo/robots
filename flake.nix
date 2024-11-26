@@ -40,13 +40,19 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          lejos-home = lejos.packages.${system}.lejos-nxj;
-          lejos-nxj-classes = "${lejos-home}/lib/nxt/classes.jar";
+          lejos-nxj = lejos.packages.${system}.lejos-nxj;
+          lejos-nxj-src = import ./nix/lejos-nxj-src.nix {
+            lejos-nxj-src = lejos.packages.${system}.lejos-nxj-src;
+          };
+          lejos-nxj-classes = "${lejos-nxj}/lib/nxt/classes.jar";
         in
-        {
+        rec {
           default = lejos.devShells.${system}.lejos-nxj.overrideAttrs (prevAttrs: {
             CLASSPATH = lejos-nxj-classes;
           });
+          experimental = default.overrideAttrs {
+            buildInputs = [ lejos-nxj-src ];
+          };
           jdtls = self.devShells.${system}.default.overrideAttrs (prevAttrs: {
             buildInputs = prevAttrs.buildInputs ++ [
               pkgs.jdt-language-server
