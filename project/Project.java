@@ -387,13 +387,14 @@ class PathFinder {
     return -1;
   }
 
-  public void run() {
+  public void run(float x, float y) {
     int final_index = mapColor2Index(4);
     int initial_index = 0; // TODO: Find nearest waypoint/node to given coordinate
 
     open_drugstore();
 
     Path path = findRoute(initial_index, final_index);
+    navigator.getPoseProvider().setPose(new Pose(x, y, 0));
     navigator.clearPath();
     navigator.followPath(path);
 
@@ -585,9 +586,8 @@ public class Project {
       LCD.drawString("ALIGN W/ BLUE", 0, 0);
       align.run(300, 300); // TODO: Callibrate for blue line
 
-      navigator.getPoseProvider().setPose(new Pose(0, (float) y, 0));
-
-      pathFinder.run();
+      pilot.rotate(89);
+      pathFinder.run(0, y); // TODO: decide starting coordinates
 
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);
