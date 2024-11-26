@@ -34,7 +34,7 @@ class TestDijkstra extends Test {
 
   static void testFindRoute() {
     // TODO: Populate adjacencyMatrix
-    boolean[][] adjacencyMatrix = new boolean[][] {};
+    // boolean[][] adjacencyMatrix = new boolean[][] {};
 
     // Dijkstra.findRoute(adjacencyMatrix, 0, 3);
 

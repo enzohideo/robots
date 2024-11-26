@@ -1,5 +1,5 @@
 program = Project
-deps = Dijkstra.java
+deps = Align.java Dijkstra.java Claw.java PathFinder.java Sonar.java
 
 UPFLAGS = -usb
 
