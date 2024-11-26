@@ -26,4 +26,4 @@ all: test run
 clean:
 	rm -vf *.class *.nxj
 
-.PHONY: clean all run test
+.PHONY: clean all run upload test
