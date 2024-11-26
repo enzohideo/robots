@@ -18,9 +18,6 @@ class Test {
   }
 
   public static void main(String[] args) {
-    passed("test passed");
-    failed("test failed");
-    check("hello", true);
-    check("world", false);
+    TestDijkstra.main(args);
   }
 }
