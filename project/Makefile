@@ -26,8 +26,8 @@ run: $(PROGRAM).nxj
 
 # ===================================================== #
 
-$(TEST).class: $(TEST).java $(TEST_DEPS)
-	nxjpcc $^
+$(TEST).class: $(TEST).java $(TEST_DEPS) $(PROGRAM_DEPS)
+	nxjpcc $(TEST).java $(TEST_DEPS)
 
 test: $(TEST).class
 	nxjpc $(TEST)
