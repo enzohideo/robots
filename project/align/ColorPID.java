@@ -1,8 +1,10 @@
+package align;
+
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
 
-class ColorPID {
+public class ColorPID {
   public static float uLine = 0;
   public static float kP = 2.0f;
   public static float kI = 0f;
@@ -61,25 +63,5 @@ class ColorPID {
     );
 
     prevError = error;
-  }
-}
-
-class Align {
-  ColorPID lColorPID;
-  ColorPID rColorPID;
-
-  public void run(int lMiddle, int rMiddle) {
-    while(true) {
-      lColorPID.run(lMiddle);
-      rColorPID.run(rMiddle);
-    }
-  }
-
-  public Align(
-    ColorPID lColorPID,
-    ColorPID rColorPID
-  ) {
-    this.lColorPID = lColorPID;
-    this.rColorPID = rColorPID;
   }
 }

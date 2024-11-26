@@ -1,3 +1,5 @@
+import align.Align;
+import align.ColorPID;
 import dijkstra.PathFinder;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
