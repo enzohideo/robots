@@ -1,14 +1,14 @@
 package test;
-import dijkstra.Dijkstra;
+import dijkstra.*;
 
 class TestDijkstra extends Test {
   static void testNode() {
     for (int i = 0; i < 16; ++i) {
-      Dijkstra.Node.Wall[] walls = {
-        Dijkstra.Node.Wall.RIGHT,
-        Dijkstra.Node.Wall.UP,
-        Dijkstra.Node.Wall.LEFT,
-        Dijkstra.Node.Wall.DOWN,
+      Node.Wall[] walls = {
+        Node.Wall.RIGHT,
+        Node.Wall.UP,
+        Node.Wall.LEFT,
+        Node.Wall.DOWN,
       };
 
       boolean[] states = new boolean[]{
@@ -18,7 +18,7 @@ class TestDijkstra extends Test {
         (i & (1 << 3)) != 0,
       };
 
-      Dijkstra.Node node = new Dijkstra.Node(states[0], states[1], states[2], states[3]);
+      Node node = new Node(states[0], states[1], states[2], states[3]);
 
       for (int j = 0; j < 4; ++j) {
         String name = String.format(
