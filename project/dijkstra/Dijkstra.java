@@ -1,10 +1,12 @@
+package dijkstra;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class Dijkstra {
+public class Dijkstra {
   // TODO: Implement matrix of Nodes
-  static class Node {
+  public static class Node {
     public static enum Wall {
       RIGHT,
       UP,
@@ -28,7 +30,7 @@ class Dijkstra {
       return 0;
     }
 
-    boolean isOpen(Wall wall) {
+    public boolean isOpen(Wall wall) {
       return (state & wallToState(wall)) != 0;
     }
 

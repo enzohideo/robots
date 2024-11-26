@@ -1,29 +1,39 @@
-program = Project
-deps = Align.java Dijkstra.java Claw.java PathFinder.java Sonar.java
+PROGRAM := Project
+PROGRAM_DEPS := Align.java dijkstra/Dijkstra.java Claw.java PathFinder.java Sonar.java
 
-UPFLAGS = -usb
+TEST_DIR := test
+TEST := $(TEST_DIR)/Test
+TEST_DEPS := $(addprefix $(TEST_DIR)/,TestDijkstra.java)
 
-$(program).class: $(program).java
-	nxjc $< $(deps)
+UPFLAGS := -usb
 
-$(program).nxj: $(program).class
-	nxjlink -o $@ $(program)
+# ===================================================== #
 
-upload: $(program).nxj
+$(PROGRAM).class: $(PROGRAM).java $(PROGRAM_DEPS)
+	nxjc $^
+
+$(PROGRAM).nxj: $(PROGRAM).class
+	nxjlink -o $@ $(PROGRAM)
+
+upload: $(PROGRAM).nxj
 	nxjupload $(UPFLAGS) $<
 
-run: $(program).nxj
+run: $(PROGRAM).nxj
 	nxjupload $(UPFLAGS) -r $<
 
-Test.class: TestDijkstra.java
-	nxjpcc Test.java $^
+# ===================================================== #
 
-test: Test.class
-	nxjpc Test
+$(TEST).class: $(TEST).java $(TESTS)
+	nxjpcc $^
+
+test: $(TEST).class
+	nxjpc $(TEST)
+
+# ===================================================== #
 
 all: test run
 
 clean:
 	rm -vf *.class *.nxj
 
-.PHONY: clean all run upload test
+.PHONY: clean all test run upload

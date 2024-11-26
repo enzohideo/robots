@@ -1,3 +1,6 @@
+package test;
+import dijkstra.Dijkstra;
+
 class TestDijkstra extends Test {
   static void testNode() {
     for (int i = 0; i < 16; ++i) {

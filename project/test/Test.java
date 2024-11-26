@@ -1,3 +1,5 @@
+package test;
+
 class Test {
   static final String CLEAR = "\u001B[0m";
   static final String GREEN = "\u001B[32m";

@@ -1,3 +1,4 @@
+import dijkstra.Dijkstra;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
