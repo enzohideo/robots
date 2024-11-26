@@ -14,6 +14,7 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 
 interface IState {
   public void run();
@@ -90,9 +91,7 @@ class Claw {
 
 }
 
-
-
-class GeneratePath implements IState {
+class PathFinder {
 
   //private boolean[][] adjacency_matrix;
 
@@ -151,16 +150,14 @@ class GeneratePath implements IState {
   //   }
   // }
 
-  private DifferentialPilot pilot;
-  private boolean[][] adjacency_matrix;
+  private Navigator navigator;
+  private boolean[][] adjMatrix;
   private Waypoint[] nodes;
-  private List<Waypoint> path;
-  private List<Waypoint> reversedPath;
 
-  public GeneratePath(DifferentialPilot pilot) {
-    this.pilot = pilot;
+  public PathFinder(Navigator navigator) {
+    this.navigator = navigator;
     this.nodes = init_list_of_nodes();
-    this.adjacency_matrix = init_adjacency_matrix();
+    this.adjMatrix = init_adjMatrix();
   }
 
   public static Waypoint[] init_list_of_nodes() {
@@ -176,7 +173,7 @@ class GeneratePath implements IState {
     return points;
   }
 
-  public static boolean[][] init_adjacency_matrix() {
+  public static boolean[][] init_adjMatrix() {
 
     boolean[][] matrix = new boolean[25][25];
     for(int i = 0; i < 25; i++) {
@@ -234,63 +231,63 @@ class GeneratePath implements IState {
   }
 
   public void close_museum() {
-    this.adjacency_matrix[14][19] = false;
-    this.adjacency_matrix[18][19] = false;
+    this.adjMatrix[14][19] = false;
+    this.adjMatrix[18][19] = false;
   }
 
   public void open_museum() {
-    this.adjacency_matrix[14][19] = true;
-    this.adjacency_matrix[18][19] = true;
+    this.adjMatrix[14][19] = true;
+    this.adjMatrix[18][19] = true;
   }
 
   public void close_drugstore() {
-    this.adjacency_matrix[12][17] = false;
-    this.adjacency_matrix[22][17] = false;
+    this.adjMatrix[12][17] = false;
+    this.adjMatrix[22][17] = false;
   }
 
   public void open_drugstore() {
-    this.adjacency_matrix[12][17] = true;
-    this.adjacency_matrix[22][17] = true;
+    this.adjMatrix[12][17] = true;
+    this.adjMatrix[22][17] = true;
   }
 
   public void close_bakery() {
-    this.adjacency_matrix[16][15] = false;
-    this.adjacency_matrix[20][15] = false;
+    this.adjMatrix[16][15] = false;
+    this.adjMatrix[20][15] = false;
   }
 
   public void open_bakery() {
-    this.adjacency_matrix[16][15] = true;
-    this.adjacency_matrix[20][15] = true;
+    this.adjMatrix[16][15] = true;
+    this.adjMatrix[20][15] = true;
   }
 
   public void close_school() {
-    this.adjacency_matrix[6][5] = false;
-    this.adjacency_matrix[10][5] = false;
+    this.adjMatrix[6][5] = false;
+    this.adjMatrix[10][5] = false;
   }
 
   public void open_school() {
-    this.adjacency_matrix[6][5] = true;
-    this.adjacency_matrix[10][5] = true;
+    this.adjMatrix[6][5] = true;
+    this.adjMatrix[10][5] = true;
   }
 
   public void close_cityhall() {
-    this.adjacency_matrix[8][7] = false;
-    this.adjacency_matrix[6][7] = false;
+    this.adjMatrix[8][7] = false;
+    this.adjMatrix[6][7] = false;
   }
 
   public void open_cityhall() {
-    this.adjacency_matrix[8][7] = true;
-    this.adjacency_matrix[6][7] = true;
+    this.adjMatrix[8][7] = true;
+    this.adjMatrix[6][7] = true;
   }
 
   public void close_library() {
-    this.adjacency_matrix[4][9] = false;
-    this.adjacency_matrix[8][9] = false;
+    this.adjMatrix[4][9] = false;
+    this.adjMatrix[8][9] = false;
   }
 
   public void open_library() {
-    this.adjacency_matrix[4][9] = true;
-    this.adjacency_matrix[8][9] = true;
+    this.adjMatrix[4][9] = true;
+    this.adjMatrix[8][9] = true;
   }
 
   public static List<Integer> dijkstra(boolean[][] adjMatrix, int start, int end) {
@@ -308,83 +305,68 @@ class GeneratePath implements IState {
     // Conjunto de vértices visitados
     boolean[] visited = new boolean[n];
 
-
     List<Integer> queue = new ArrayList<>();
     queue.add(start);
 
     while (!queue.isEmpty()) {
-        // Encontrar o vértice com a menor distância na lista
-        int current = -1;
-        int minDistance = Integer.MAX_VALUE;
-        for (int vertex : queue) {
-            if (distances[vertex] < minDistance) {
-                minDistance = distances[vertex];
-                current = vertex;
+      // Encontrar o vértice com a menor distância na lista
+      int current = -1;
+      int minDistance = Integer.MAX_VALUE;
+      for (int vertex : queue) {
+        if (distances[vertex] >= minDistance) continue;
+        minDistance = distances[vertex];
+        current = vertex;
+      }
+
+      // Remover o vértice atual da lista
+      queue.remove(current);
+
+      // Se o vértice já foi visitado, ignorá-lo
+      if (visited[current]) continue;
+      visited[current] = true;
+
+      // Verificar todos os vizinhos
+      for (int neighbor = 0; neighbor < n; neighbor++) {
+        if (adjMatrix[current][neighbor] && !visited[neighbor]) {
+          int newDist = distances[current] + 1; // Peso uniforme (1)
+          if (newDist < distances[neighbor]) {
+            distances[neighbor] = newDist;
+            previous[neighbor] = current;
+            if (!queue.contains(neighbor)) {
+              queue.add(neighbor);
             }
+          }
         }
-
-        // Remover o vértice atual da lista
-        queue.remove((Integer) current);
-
-        // Se o vértice já foi visitado, ignorá-lo
-        if (visited[current]) continue;
-        visited[current] = true;
-
-        // Verificar todos os vizinhos
-        for (int neighbor = 0; neighbor < n; neighbor++) {
-            if (adjMatrix[current][neighbor] && !visited[neighbor]) {
-                int newDist = distances[current] + 1; // Peso uniforme (1)
-                if (newDist < distances[neighbor]) {
-                    distances[neighbor] = newDist;
-                    previous[neighbor] = current;
-                    if (!queue.contains(neighbor)) {
-                        queue.add(neighbor);
-                    }
-                }
-            }
-        }
+      }
     }
 
-    // Reconstruir o caminho mais curto
     List<Integer> path = new ArrayList<>();
     for (int at = end; at != -1; at = previous[at]) {
-        path.add(at);
+      path.add(at);
     }
 
-    // Reverter a lista manualmente
-    List<Integer> reversedPath = new ArrayList<>();
-    for (int i = path.size() - 1; i >= 0; i--) {
-        reversedPath.add(path.get(i));
+    if (path.isEmpty() || path.get(0) != start) {
+      return new ArrayList<>();
     }
 
-    // Se o caminho não começa com o vértice inicial, significa que não há caminho
-    if (reversedPath.isEmpty() || reversedPath.get(0) != start) {
-        return new ArrayList<>(); // Retorna uma lista vazia
+    for (int i = 0; i < path.size() / 2; ++i) {
+      int j = path.size() - i - 1;
+      path.set(i, path.get(i) ^ path.get(j));
+      path.set(j, path.get(i) ^ path.get(j));
+      path.set(i, path.get(i) ^ path.get(j));
     }
 
-    return reversedPath;
+    return path;
   }
 
-  public void ReversePath(List<Waypoint> path) {
-    List<Waypoint> reversedPath = new ArrayList<Waypoint>();
-    for (int i = path.size() - 1; i >= 0; i--) {
-      reversedPath.add(path.get(i));
-    }
-    this.reversedPath = reversedPath;
-  }
+  public Path findRoute(int initialNode, int finalNode) {
+    Path waypoints = new Path();
 
-  public void WaypointsPath(List<Integer> nodes) {
-    List<Waypoint> path = new ArrayList<Waypoint>();
-    for (int i = 0; i < nodes.size(); i++) {
-      path.add(this.nodes[nodes.get(i)]);
+    for (int index : dijkstra(this.adjMatrix, initialNode, finalNode)) {
+      waypoints.add(this.nodes[index]);
     }
-    this.path = path;
-    ReversePath(path);
-  }
 
-  public void calculateRoute(int initialNode, int finalNode) {
-    List<Integer> index_path = dijkstra(this.adjacency_matrix, initialNode, finalNode);
-    WaypointsPath(index_path); 
+    return waypoints;
   }
 
   public int mapColor2Index(int color) {
@@ -405,27 +387,19 @@ class GeneratePath implements IState {
     return -1;
   }
 
-  public void travel(DifferentialPilot pilot, List<Waypoint> listPath) {
-    Navigator navigator = new Navigator(pilot);
-    List<Waypoint> path = new ArrayList<Waypoint>();
-    for (int i = 0; i < listPath.size(); i++) {
-      navigator.addWaypoint(listPath.get(i));
-    }
-    navigator.followPath();
-  }
-
-  public void go() {
-    int final_index = mapColor2Index(4);
-    int initial_index = 0;
-    open_drugstore();
-    calculateRoute(initial_index, final_index);
-    travel(this.pilot, this.path);
-    close_drugstore();
-    LCD.drawString("FINISHED", 0, 0);
-  }
-
   public void run() {
+    int final_index = mapColor2Index(4);
+    int initial_index = 0; // TODO: Find nearest waypoint/node to given coordinate
 
+    open_drugstore();
+
+    Path path = findRoute(initial_index, final_index);
+    navigator.clearPath();
+    navigator.followPath(path);
+
+    close_drugstore();
+
+    LCD.drawString("FINISHED", 0, 0);
   }
 }
 
@@ -525,7 +499,7 @@ public class Project {
   static Align align;
   static Sonar sonar;
   static Claw claw;
-  static GeneratePath generatePath;
+  static PathFinder pathFinder;
 
   static double wheelDiameter = 6.0;
   static double trackWidth = 12.0;
@@ -554,6 +528,7 @@ public class Project {
     DifferentialPilot pilot = new DifferentialPilot(
       wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, false
     );
+    Navigator navigator = new Navigator(pilot);
 
     DifferentialPilot reversePilot = new DifferentialPilot(
       wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, true
@@ -575,11 +550,8 @@ public class Project {
     align = new Align(lColorPID, rColorPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor);
-    generatePath = new GeneratePath(pilot);
+    pathFinder = new PathFinder(navigator);
 
-    Button.waitForAnyPress();
-
-    generatePath.go();
     Button.waitForAnyPress();
 
     while(true) {
@@ -613,7 +585,10 @@ public class Project {
       LCD.drawString("ALIGN W/ BLUE", 0, 0);
       align.run(300, 300); // TODO: Callibrate for blue line
 
-      reverseNavigator.getPoseProvider().setPose(new Pose(0, (float) y, 0));
+      navigator.getPoseProvider().setPose(new Pose(0, (float) y, 0));
+
+      pathFinder.run();
+
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);
     }
