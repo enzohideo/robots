@@ -29,7 +29,7 @@ public class Dijkstra {
         current = vertex;
       }
 
-      queue.remove(current);
+      queue.remove((Integer) current);
 
       if (visited[current]) continue;
       visited[current] = true;
@@ -53,15 +53,15 @@ public class Dijkstra {
       path.add(at);
     }
 
-    if (path.isEmpty() || path.get(0) != start) {
-      return new ArrayList<>();
-    }
-
     for (int i = 0; i < path.size() / 2; ++i) {
       int j = path.size() - i - 1;
       path.set(i, path.get(i) ^ path.get(j));
       path.set(j, path.get(i) ^ path.get(j));
       path.set(i, path.get(i) ^ path.get(j));
+    }
+
+    if (path.size() == 0 || path.get(0) != start) {
+      return new ArrayList<>();
     }
 
     return path;
