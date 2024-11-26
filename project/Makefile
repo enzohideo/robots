@@ -15,8 +15,11 @@ upload: $(program).nxj
 run: $(program).nxj
 	nxjupload $(UPFLAGS) -r $<
 
-test:
-	nxjpcc Test.java TestDijkstra.java && nxjpc Test
+Test.class: TestDijkstra.java
+	nxjpcc Test.java $^
+
+test: Test.class
+	nxjpc Test
 
 all: test run
 
