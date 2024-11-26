@@ -23,6 +23,7 @@ public class Project {
 
   static SensorPort lColorSensorPort = SensorPort.S3;
   static SensorPort rColorSensorPort = SensorPort.S4;
+  static SensorPort clawColorSensorPort = SensorPort.S1;
 
   static Align align;
   static Sonar sonar;
@@ -48,6 +49,7 @@ public class Project {
 
     ColorSensor lColorSensor = new ColorSensor(lColorSensorPort);
     ColorSensor rColorSensor = new ColorSensor(rColorSensorPort);
+    ColorSensor clawColorSensor = new ColorSensor(clawColorSensorPort);
 
     NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(lMotorPort);
     NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(rMotorPort);
@@ -77,7 +79,7 @@ public class Project {
 
     align = new Align(lColorPID, rColorPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
-    claw = new Claw(clawMotor);
+    claw = new Claw(clawMotor, clawColorSensor);
     pathFinder = new PathFinder(navigator);
 
     Button.waitForAnyPress();
@@ -97,8 +99,9 @@ public class Project {
       pilot.rotate(89, false);
       pilot.travel(5, false);
 
-      claw.run(true);
+      int color = claw.run(true);
       claw.run(false);
+      LCD.drawString("CLAW COLOR " + color, 0, 0);
 
       pilot.travel(-10);
       pilot.rotate(89);
