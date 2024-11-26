@@ -1,8 +1,10 @@
+package sonar;
+
 import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.UltrasonicSensor;
 
-class Sonar {
+public class Sonar {
   public enum Pipe {
     SHORT, TALL
   }

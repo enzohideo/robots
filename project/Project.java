@@ -1,5 +1,6 @@
 import align.Align;
 import align.ColorPID;
+import claw.Claw;
 import dijkstra.PathFinder;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
@@ -11,6 +12,7 @@ import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
+import sonar.Sonar;
 
 public class Project {
   static SensorPort ultrasonicSensorPort = SensorPort.S2;

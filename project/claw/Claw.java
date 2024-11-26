@@ -1,6 +1,8 @@
+package claw;
+
 import lejos.nxt.NXTRegulatedMotor;
 
-class Claw {
+public class Claw {
   private NXTRegulatedMotor motor;
   static int closeAngle = -45;
 
