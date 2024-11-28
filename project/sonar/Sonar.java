@@ -21,11 +21,13 @@ public class Sonar {
     this.sonar = sonar;
     this.lMotor = lMotor;
     this.rMotor = rMotor;
+    this.sonar.off();
   }
 
   public Pipe run() {
     this.rMotor.setPower(power);
     this.lMotor.setPower(power);
+    this.sonar.continuous();
 
     Pipe result;
 
@@ -51,6 +53,7 @@ public class Sonar {
 
     this.rMotor.setPower(0);
     this.lMotor.setPower(0);
+    this.sonar.off();
 
     return result;
   }
