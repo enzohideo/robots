@@ -13,11 +13,11 @@ public class PathFinder {
 
   public PathFinder(Navigator navigator) {
     this.navigator = navigator;
-    this.nodes = init_list_of_nodes();
+    this.nodes = init_nodes();
     this.adjMatrix = init_adjMatrix();
   }
 
-  public static Waypoint[] init_list_of_nodes() {
+  public static Waypoint[] init_nodes() {
     Waypoint[] points = new Waypoint[25];
     double initialValue = 15.0;
 
@@ -87,64 +87,29 @@ public class PathFinder {
     return matrix;
   }
 
-  public void close_museum() {
-    this.adjMatrix[14][19] = false;
-    this.adjMatrix[18][19] = false;
+  public enum Location {
+    MUSEUM(new int[][]{{14, 19}, {18, 19}}),
+    DRUGSTORE(new int[][]{{12, 17}, {22, 17}}),
+    BAKERY(new int[][]{{16, 15}, {20, 15}}),
+    SCHOOL(new int[][]{{6, 5}, {10, 5}}),
+    CITYHALL(new int[][]{{8, 7}, {6, 7}}),
+    LIBRARY(new int[][]{{4, 9}, {8, 9}});
+
+    private final int[][] positions;
+
+    Location(int[][] positions) {
+      this.positions = positions;
+    }
+
+    public int[][] getPositions() {
+      return positions;
+    }
   }
 
-  public void open_museum() {
-    this.adjMatrix[14][19] = true;
-    this.adjMatrix[18][19] = true;
-  }
-
-  public void close_drugstore() {
-    this.adjMatrix[12][17] = false;
-    this.adjMatrix[22][17] = false;
-  }
-
-  public void open_drugstore() {
-    this.adjMatrix[12][17] = true;
-    this.adjMatrix[22][17] = true;
-  }
-
-  public void close_bakery() {
-    this.adjMatrix[16][15] = false;
-    this.adjMatrix[20][15] = false;
-  }
-
-  public void open_bakery() {
-    this.adjMatrix[16][15] = true;
-    this.adjMatrix[20][15] = true;
-  }
-
-  public void close_school() {
-    this.adjMatrix[6][5] = false;
-    this.adjMatrix[10][5] = false;
-  }
-
-  public void open_school() {
-    this.adjMatrix[6][5] = true;
-    this.adjMatrix[10][5] = true;
-  }
-
-  public void close_cityhall() {
-    this.adjMatrix[8][7] = false;
-    this.adjMatrix[6][7] = false;
-  }
-
-  public void open_cityhall() {
-    this.adjMatrix[8][7] = true;
-    this.adjMatrix[6][7] = true;
-  }
-
-  public void close_library() {
-    this.adjMatrix[4][9] = false;
-    this.adjMatrix[8][9] = false;
-  }
-
-  public void open_library() {
-    this.adjMatrix[4][9] = true;
-    this.adjMatrix[8][9] = true;
+  public void toggle_door(Location location, boolean on) {
+    for (int[] position : location.getPositions()) {
+      this.adjMatrix[position[0]][position[1]] = on;
+    }
   }
 
   public Path findRoute(int initialNode, int finalNode) {
@@ -157,37 +122,39 @@ public class PathFinder {
     return waypoints;
   }
 
-  public int mapColor2Index(int color) {
-    switch(color) {
-      case 0: // school
+  public int location2Index(Location location) {
+    switch(location) {
+      case SCHOOL:
         return 5;
-      case 1: // city hall
+      case CITYHALL:
         return 7;
-      case 2: // library 
+      case LIBRARY:
         return 9;
-      case 3: // bakery
+      case BAKERY:
         return 15;
-      case 4: // drugstore
+      case DRUGSTORE:
         return 17;
-      case 5: // museum
+      case MUSEUM:
         return 19;
       }
     return -1;
   }
 
-  public void run(float x, float y) {
-    int final_index = mapColor2Index(4);
-    int initial_index = 0; // TODO: Find nearest waypoint/node to given coordinate
+  public int initialIndex(float y) {
+    return (int) (y / 30f);
+}
 
-    open_drugstore();
+  public void run(float x, float y, Location location) {
+    int final_index = location2Index(location);
+    int initial_index = initialIndex(y); // TODO: Find nearest waypoint/node to given coordinate
+
+    toggle_door(location, true);
 
     Path path = findRoute(initial_index, final_index);
     navigator.getPoseProvider().setPose(new Pose(x, y, 0));
     navigator.clearPath();
     navigator.followPath(path);
 
-    close_drugstore();
-
-    LCD.drawString("FINISHED", 0, 0);
+    toggle_door(location, false);
   }
 }
