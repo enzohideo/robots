@@ -5,9 +5,13 @@ public class Align {
   LightPID rLightPID;
 
   public void run(int lMiddle, int rMiddle) {
-    while(true) {
-      lLightPID.run(lMiddle);
-      rLightPID.run(rMiddle);
+    boolean leftHasEnded = false;
+    boolean rightHasEnded = false;
+    while(!leftHasEnded && !rightHasEnded) {
+      if (!leftHasEnded && lLightPID.run(lMiddle))
+        leftHasEnded = true;
+      if (!rightHasEnded && rLightPID.run(rMiddle))
+        rightHasEnded = true;
     }
   }
 

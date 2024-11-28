@@ -10,6 +10,7 @@ public class LightPID {
   public static float kI = 0f;
   public static float kD = 1f;
 
+  static int stopThreshold = 5;
   static int count = 0;
   int innerCount = 0;
 
@@ -58,15 +59,20 @@ public class LightPID {
     return (int) (value > upper ? upper : (value < lower ? lower : value));
   }
 
-  public void run(int middle) {
+  public boolean run(int middle) {
     int value = sensor.getLightValue();
     int error = getError(value, middle);
 
-    turn((value < this.white)
+    float turnValue = (value < this.white)
       ? proportional(error) + integral(error) + derivative(error)
-      : 25
-    );
+      : 25;
+
+    if (Math.abs(turnValue) < stopThreshold)
+      return true;
+
+    turn(turnValue);
 
     prevError = error;
+    return false;
   }
 }
