@@ -2,6 +2,7 @@ import align.Align;
 import align.LightPID;
 import claw.Claw;
 import dijkstra.PathFinder;
+import dijkstra.Arena.Location;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;
@@ -119,7 +120,7 @@ public class Project {
       align.run(300, 300); // TODO: Callibrate for blue line
 
       pilot.rotate(89);
-      pathFinder.run(0, (float) 0, PathFinder.Location.MUSEUM); // TODO: decide starting coordinates
+      pathFinder.run(0, (float) 0, Location.MUSEUM); // TODO: decide starting coordinates
 
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);
