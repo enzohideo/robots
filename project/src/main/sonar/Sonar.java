@@ -1,9 +1,7 @@
 package sonar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.UltrasonicSensor;
@@ -23,7 +21,6 @@ public class Sonar {
   private float[] tallPipeThreshold = { 25f, 16f };
 
   private int power = 25;
-  private int samplingPeriod = 25;
 
   class Distances {
     int[] array;
@@ -117,7 +114,7 @@ public class Sonar {
       LCD.drawString("Var: " + Float.toString(distances.var()), 0, 3);
 
       distance = distances.min();
-      float avg = distances.avg();
+      // float avg = distances.avg();
 
       if (distances.var() > 4e3) continue;
 
@@ -128,8 +125,6 @@ public class Sonar {
         LCD.drawString("SHORT", 0, 4);
         return Pipe.SHORT;
       }
-
-      sleep();
     }
   }
 
@@ -150,13 +145,5 @@ public class Sonar {
         } while (distance > this.shortPipeThreshold[1]);
         break;
     }
-  }
-
-  void sleep() {
-    // try {
-    //   Thread.sleep(this.samplingPeriod);
-    // } catch (InterruptedException error) {
-    //   LCD.drawString("Sonar ERROR: interrupted", 0, 0);
-    // }
   }
 }
