@@ -1,9 +1,8 @@
-package test;
 import java.util.List;
 
 import dijkstra.*;
 
-class TestDijkstra extends Test {
+public class TestDijkstra extends Test {
   static boolean[][] adjMatrix() {
     boolean[][] matrix = new boolean[25][25];
     for(int i = 0; i < 25; i++) {

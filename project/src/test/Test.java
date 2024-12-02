@@ -1,6 +1,4 @@
-package test;
-
-class Test {
+public class Test {
   static final String CLEAR = "\u001B[0m";
   static final String GREEN = "\u001B[32m";
   static final String RED = "\u001B[31m";

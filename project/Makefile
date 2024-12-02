@@ -1,11 +1,14 @@
-PROGRAM := Project
-PROGRAM_DEPS := $(addprefix align/,Align.java ColorPID.java LightPID.java)
-PROGRAM_DEPS += $(addprefix claw/,Claw.java)
-PROGRAM_DEPS += $(addprefix dijkstra/,Dijkstra.java PathFinder.java)
-PROGRAM_DEPS += $(addprefix sonar/,Sonar.java)
+PROGRAM_DIR := src/main
+PROGRAM_NAME := Project
+PROGRAM := $(PROGRAM_DIR)/$(PROGRAM_NAME)
+PROGRAM_DEPS := $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/dijkstra/,Dijkstra.java PathFinder.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
 
-TEST_DIR := test
-TEST := $(TEST_DIR)/Test
+TEST_DIR := src/test
+TEST_NAME := Test
+TEST := $(TEST_DIR)/$(TEST_NAME)
 TEST_DEPS := $(addprefix $(TEST_DIR)/,TestDijkstra.java)
 
 UPFLAGS := -usb
@@ -16,7 +19,7 @@ $(PROGRAM).class: $(PROGRAM).java $(PROGRAM_DEPS)
 	nxjc $^
 
 $(PROGRAM).nxj: $(PROGRAM).class
-	nxjlink -o $@ $(PROGRAM)
+	nxjlink -o $@ $(PROGRAM_NAME) --classpath $(PROGRAM_DIR)
 
 upload: $(PROGRAM).nxj
 	nxjupload $(UPFLAGS) $<
@@ -27,16 +30,17 @@ run: $(PROGRAM).nxj
 # ===================================================== #
 
 $(TEST).class: $(TEST).java $(TEST_DEPS) $(PROGRAM_DEPS)
-	nxjpcc $(TEST).java $(TEST_DEPS)
+	nxjpcc -cp '$(PROGRAM_DIR):$(TEST_DIR)' $(TEST).java $(TEST_DEPS)
 
 test: $(TEST).class
-	nxjpc $(TEST)
+	nxjpc -cp '$(PROGRAM_DIR):$(TEST_DIR)' $(TEST_NAME)
 
 # ===================================================== #
 
 all: test run
 
 clean:
-	rm -vf *.class *.nxj
+	find . -name \*.class -type f -delete -print
+	find . -name \*.nxj -type f -delete -print
 
 .PHONY: clean all test run upload
