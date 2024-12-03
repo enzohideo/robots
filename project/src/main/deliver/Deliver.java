@@ -19,5 +19,6 @@ public class Deliver {
     navigator.getPoseProvider().setPose(new Pose(x, y, 0));
     navigator.clearPath();
     navigator.followPath(path);
+    navigator.waitForStop();
   }
 }
