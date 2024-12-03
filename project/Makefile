@@ -6,16 +6,16 @@ TEST_DIR := src/test
 TEST_NAME := Test
 TEST := $(TEST_DIR)/$(TEST_NAME)
 
-COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Node.java Deliver.java)
+COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Node.java Arena.java)
 
 PROGRAM_DEPS := $(COMMON_DEPS)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Arena.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Deliver.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
 
 TEST_DEPS := $(COMMON_DEPS)
-TEST_DEPS += $(addprefix $(TEST_DIR)/,TestArena.java)
+TEST_DEPS += $(addprefix $(TEST_DIR)/,TestDeliver.java)
 
 UPFLAGS := -usb
 
