@@ -6,7 +6,7 @@ import lejos.nxt.NXTMotor;
 
 public class LightPID {
   public static float uLine = 0;
-  public static float kP = 2.0f;
+  public static float kP = 12.0f;
   public static float kI = 0f;
   public static float kD = 1f;
 
@@ -36,13 +36,15 @@ public class LightPID {
 
   public float proportional(int error) {
     // Stop motor before crossing the line
-    float tmp = kP * error;
-    return tmp < -2 && tmp > -8 ?  4 * tmp : tmp;
+    // float tmp = kP * error;
+    // return tmp * tmp < stopThreshold * stopThreshold ?  tmp * tmp * tmp : tmp;
+    return kP * (float) Math.sqrt(error);
   }
 
   public float integral(int error) {
     if (accError * error < 0) accError = 0;
-    accError = accError + error;
+    if (error > stopThreshold)
+      accError = accError + error;
     return kI * accError;
   }
 
@@ -67,8 +69,8 @@ public class LightPID {
       ? proportional(error) + integral(error) + derivative(error)
       : 25;
 
-    if (Math.abs(turnValue) < stopThreshold)
-      return true;
+    // if (Math.abs(turnValue) < stopThreshold)
+    //   return true;
 
     turn(turnValue);
 

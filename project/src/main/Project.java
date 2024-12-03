@@ -84,8 +84,8 @@ public class Project {
     claw = new Claw(clawMotor, clawColorSensor);
     Deliver = new Deliver(navigator);
 
-    align.run(56, 45);
     Button.waitForAnyPress();
+    align.run(34, 32);
 
     while(true) {
       LCD.drawString("START", 0, 0);
@@ -93,34 +93,39 @@ public class Project {
       Sonar.Pipe pipe = sonar.run();
       LCD.drawString("PIPE: " + pipe.name(), 0, 1);
 
-      LCD.drawString("WAITING", 0, 0);
-      sleep(1000);
-
       pilot.quickStop();
       pilot.setRotateSpeed(40);
       pilot.setTravelSpeed(5);
-      pilot.rotate(89, false);
-      pilot.travel(5, false);
+      pilot.travel(10, false);
+      pilot.rotate(90, false);
+      pilot.travel(10, false);
 
       int color = claw.run(true);
-      claw.run(false);
       LCD.drawString("CLAW COLOR " + color, 0, 0);
 
       pilot.travel(-10);
-      pilot.rotate(89);
+      pilot.rotate(90);
 
-      LCD.drawString("ALIGN W/ RED", 0, 0);
-      align.run(300, 300); // TODO: Improve red line callibration
+      // TODO: Align
 
-      double y = trackWidth / 2;
-      pilot.travel(-y);
-      pilot.rotate(-89);
+      // Button.waitForAnyPress();
 
-      LCD.drawString("ALIGN W/ BLUE", 0, 0);
-      align.run(300, 300); // TODO: Callibrate for blue line
+      // LCD.drawString("ALIGN W/ RED", 0, 0);
+      // align.run(56, 45);
 
-      pilot.rotate(89);
+      // double y = trackWidth / 2;
+      // pilot.travel(-y);
+      // pilot.rotate(-89);
+
+      // LCD.drawString("ALIGN W/ BLUE", 0, 0);
+      // align.run(51, 48);
+
+      // pilot.rotate(89);
+      float x = navigator.getPoseProvider().getPose().getX();
+      float y = navigator.getPoseProvider().getPose().getY();
       Deliver.run(0, (float) 0, Location.MUSEUM); // TODO: decide starting coordinates
+
+      claw.run(false);
 
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);
