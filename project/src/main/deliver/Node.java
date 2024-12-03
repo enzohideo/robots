@@ -20,13 +20,13 @@ public class Node {
   static byte toggledMask = 0;
 
   static {
-    for (int i = 1; i < 8; i += 2) {
+    for (int i = 0; i < 8; i += 2) {
       toggledMask += (1 << i);
     }
   }
 
   public boolean isClosed() {
-    return (state & toggledMask) != 0;
+    return (state & toggledMask) == 0;
   }
 
   public void close() {
