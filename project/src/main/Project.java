@@ -1,8 +1,8 @@
 import align.Align;
 import align.LightPID;
 import claw.Claw;
-import dijkstra.PathFinder;
-import dijkstra.Arena.Location;
+import arena.PathFinder;
+import arena.Arena.Location;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;

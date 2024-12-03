@@ -1,6 +1,6 @@
-package dijkstra;
+package arena;
 
-import dijkstra.Arena.Location;
+import arena.Arena.Location;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.pathfinding.Path;

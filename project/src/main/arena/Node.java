@@ -1,4 +1,4 @@
-package dijkstra;
+package arena;
 
 // TODO: Implement matrix of Nodes
 public class Node {
