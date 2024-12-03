@@ -15,16 +15,9 @@ public class PathFinder {
   }
 
   public void run(float x, float y, Location location) {
-    int final_index = this.arena.location2Index(location);
-    int initial_index = this.arena.initialIndex(y);
-
-    this.arena.toggle_door(location, true);
-
-    Path path = this.arena.findRoute(initial_index, final_index);
+    Path path = this.arena.findRoute(x, y, location);
     navigator.getPoseProvider().setPose(new Pose(x, y, 0));
     navigator.clearPath();
     navigator.followPath(path);
-
-    this.arena.toggle_door(location, false);
   }
 }

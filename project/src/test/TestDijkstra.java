@@ -41,11 +41,6 @@ public class TestDijkstra extends Test {
   static void testFindRoute() {
     Arena arena = new Arena();
 
-    // TODO: Toggle doors inside findRoute
-    arena.toggle_door(Location.DRUGSTORE, true);
-    Path result = arena.findRoute(0, 17);
-    arena.toggle_door(Location.DRUGSTORE, false);
-
     double[][] answer = {
       { 15., 15. },
       { 45., 15. },
@@ -55,7 +50,9 @@ public class TestDijkstra extends Test {
       { 75., 105.}
     };
 
-    if (!check("answer has same length", answer.length == result.size()))
+    Path result = arena.findRoute(0, 0, Arena.Location.DRUGSTORE);
+
+    if (!check("path has right length", answer.length == result.size()))
       return;
 
     for (int i = 0; i < result.size(); ++i) {

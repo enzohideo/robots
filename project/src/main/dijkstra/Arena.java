@@ -107,7 +107,7 @@ public class Arena {
   }
 
   // TODO: Just store the index inside each location
-  public int location2Index(Location location) {
+  int location2Index(Location location) {
     switch(location) {
       case SCHOOL:
         return 5;
@@ -125,18 +125,18 @@ public class Arena {
     return -1;
   }
 
-  public int initialIndex(float y) {
+  // TODO: Test
+  int findNearestNode(float x, float y) {
     return (int) (y / 30f);
   }
 
-  public void toggle_door(Location location, boolean on) {
+  void toggleDoor(Location location, boolean on) {
     for (int[] position : location.getPositions()) {
       this.adjMatrix[position[0]][position[1]] = on;
     }
   }
 
-  // TODO: Receive initial coordinates and final Location instead of indexes
-  public Path findRoute(int start, int end) {
+  int[] dijkstra(int start, int end) {
     int n = this.adjMatrix.length;
 
     int[] distances = new int[n];
@@ -167,7 +167,7 @@ public class Arena {
 
       for (int neighbor = 0; neighbor < n; neighbor++) {
         if (adjMatrix[current][neighbor] && !visited[neighbor]) {
-          int newDist = distances[current] + 1; // Peso uniforme (1)
+          int newDist = distances[current] + 1;
           if (newDist < distances[neighbor]) {
             distances[neighbor] = newDist;
             previous[neighbor] = current;
@@ -179,10 +179,22 @@ public class Arena {
       }
     }
 
+    return previous;
+  }
+
+  public Path findRoute(float x, float y, Location location) {
+    int start = findNearestNode(x, y);
+    int end = location2Index(location);
+
+    // TODO: Revert path inside dijkstra
+    toggleDoor(location, true);
+    int[] nodePath = dijkstra(start, end);
+    toggleDoor(location, false);
+
     Path path = new Path();
     boolean validPath = false;
 
-    for (int at = end; at != -1; at = previous[at]) {
+    for (int at = end; at != -1; at = nodePath[at]) {
       path.add(this.nodes[at]);
       if (at == start) {
         validPath = true;
