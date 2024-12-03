@@ -1,9 +1,9 @@
-import arena.Node;
+import deliver.Arena;
+import deliver.Node;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
-import arena.Arena;
 
-public class TestArena extends Test {
+public class TestDeliver extends Test {
   static class TestNode {
     static Node.Wall[] walls = {
       Node.Wall.RIGHT,

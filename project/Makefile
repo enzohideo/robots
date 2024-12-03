@@ -6,11 +6,11 @@ TEST_DIR := src/test
 TEST_NAME := Test
 TEST := $(TEST_DIR)/$(TEST_NAME)
 
-COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/arena/,Node.java PathFinder.java)
+COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Node.java Deliver.java)
 
 PROGRAM_DEPS := $(COMMON_DEPS)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/arena/,Arena.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Arena.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
 

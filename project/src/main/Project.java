@@ -1,8 +1,8 @@
 import align.Align;
 import align.LightPID;
 import claw.Claw;
-import arena.PathFinder;
-import arena.Arena.Location;
+import deliver.Deliver;
+import deliver.Arena.Location;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.MotorPort;
@@ -30,7 +30,7 @@ public class Project {
   static Align align;
   static Sonar sonar;
   static Claw claw;
-  static PathFinder pathFinder;
+  static Deliver Deliver;
 
   static double wheelDiameter = 6.0;
   static double trackWidth = 12.0;
@@ -82,7 +82,7 @@ public class Project {
     align = new Align(lLightPID, rLightPID);
     sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
     claw = new Claw(clawMotor, clawColorSensor);
-    pathFinder = new PathFinder(navigator);
+    Deliver = new Deliver(navigator);
 
     align.run(56, 45);
     Button.waitForAnyPress();
@@ -120,7 +120,7 @@ public class Project {
       align.run(300, 300); // TODO: Callibrate for blue line
 
       pilot.rotate(89);
-      pathFinder.run(0, (float) 0, Location.MUSEUM); // TODO: decide starting coordinates
+      Deliver.run(0, (float) 0, Location.MUSEUM); // TODO: decide starting coordinates
 
       LCD.drawString("WAITING", 0, 0);
       sleep(1000);

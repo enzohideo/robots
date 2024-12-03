@@ -1,4 +1,4 @@
-package arena;
+package deliver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +18,7 @@ public class Arena {
     initNodes();
   }
 
+  // TODO: Move to separate file
   public enum Location {
     MUSEUM(new int[][]{{14, 19}, {18, 19}}),
     DRUGSTORE(new int[][]{{12, 17}, {22, 17}}),

@@ -1,21 +1,21 @@
-package arena;
+package deliver;
 
-import arena.Arena.Location;
+import deliver.Arena.Location;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.pathfinding.Path;
 
-public class PathFinder {
+public class Deliver {
   private Navigator navigator;
-  private Arena arena;
+  private Arena deliver;
 
-  public PathFinder(Navigator navigator) {
+  public Deliver(Navigator navigator) {
     this.navigator = navigator;
-    this.arena = new Arena();
+    this.deliver = new Arena();
   }
 
   public void run(float x, float y, Location location) {
-    Path path = this.arena.findRoute(x, y, location);
+    Path path = this.deliver.findRoute(x, y, location);
     navigator.getPoseProvider().setPose(new Pose(x, y, 0));
     navigator.clearPath();
     navigator.followPath(path);
