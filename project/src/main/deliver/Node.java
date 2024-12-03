@@ -25,8 +25,22 @@ public class Node {
     }
   }
 
+  public boolean isClosed() {
+    return (state & toggledMask) != 0;
+  }
+
+  public void close() {
+    if (!isClosed())
+      state <<= 1;
+  }
+
+  public void open() {
+    if (isClosed())
+      state >>= 1;
+  }
+
   public void toggle() {
-    if ((state & toggledMask) != 0)
+    if (isClosed())
       state >>= 1;
     else
       state <<= 1;
