@@ -126,7 +126,7 @@ public class TestDeliver extends Test {
   }
 
   public static void main(String[] args) {
-    name(TestArena.class.getSimpleName());
+    name(TestDeliver.class.getSimpleName());
     testFindRoute();
     TestNode.testIsOpen();
     TestNode.testToggle();

@@ -23,6 +23,6 @@ public class Test {
   }
 
   public static void main(String[] args) {
-    TestArena.main(args);
+    TestDeliver.main(args);
   }
 }
