@@ -18,6 +18,6 @@ public class Test {
   }
 
   public static void main(String[] args) {
-    TestDijkstra.main(args);
+    TestArena.main(args);
   }
 }

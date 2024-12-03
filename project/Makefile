@@ -15,7 +15,7 @@ PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
 
 TEST_DEPS := $(COMMON_DEPS)
-TEST_DEPS += $(addprefix $(TEST_DIR)/,TestDijkstra.java)
+TEST_DEPS += $(addprefix $(TEST_DIR)/,TestArena.java)
 
 UPFLAGS := -usb
 

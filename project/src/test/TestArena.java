@@ -3,7 +3,7 @@ import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import arena.Arena;
 
-public class TestDijkstra extends Test {
+public class TestArena extends Test {
   static void testNode() {
     for (int i = 0; i < 16; ++i) {
       Node.Wall[] walls = {
