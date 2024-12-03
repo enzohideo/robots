@@ -36,6 +36,17 @@ run: $(PROGRAM).nxj
 
 # ===================================================== #
 
+$(PROGRAM_DIR)/deliver/Deliver.class: $(PROGRAM_DIR)/deliver/Deliver.java $(PROGRAM_DEPS)
+	nxjc $^
+
+Deliver.nxj: $(PROGRAM_DIR)/deliver/Deliver.class $(PROGRAM_DEPS)
+	nxjlink -o $@ deliver/Deliver --classpath $(PROGRAM_DIR)
+
+deliver: Deliver.nxj
+	nxjupload $(UPFLAGS) -r $<
+
+# ===================================================== #
+
 $(TEST).class: $(TEST).java $(TEST_DEPS) $(PROGRAM_DEPS)
 	nxjpcc -cp '$(PROGRAM_DIR):$(TEST_DIR)' $(TEST).java $(TEST_DEPS)
 
