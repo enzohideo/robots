@@ -17,6 +17,10 @@ public class Test {
     System.out.printf("%sFAILED:%s %s\n", RED, CLEAR, testName);
   }
 
+  static public void name(String testClass) {
+    System.out.printf("%s------------- %s -------------%s\n", YELLOW, testClass, CLEAR);
+  }
+
   public static void main(String[] args) {
     TestArena.main(args);
   }

@@ -70,6 +70,7 @@ public class TestArena extends Test {
   }
 
   public static void main(String[] args) {
+    name(TestArena.class.getSimpleName());
     testFindRoute();
     testNode();
   }
