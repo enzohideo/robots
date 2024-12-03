@@ -2,7 +2,6 @@ import dijkstra.Node;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import dijkstra.Arena;
-import dijkstra.Arena.Location;
 
 public class TestDijkstra extends Test {
   static void testNode() {

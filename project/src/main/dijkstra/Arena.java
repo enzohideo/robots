@@ -8,6 +8,8 @@ import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 
 public class Arena {
+  static int[] nullPath = new int[]{};
+
   Waypoint[] nodes;
   boolean[][] adjMatrix;
 
@@ -179,38 +181,39 @@ public class Arena {
       }
     }
 
-    return previous;
+    int length = distances[end] + 1;
+
+    if (length <= 0 || length == Integer.MAX_VALUE) {
+      return nullPath;
+    }
+
+    int[] path = new int[length];
+
+    for (int at = end, i = 1; at != -1; at = previous[at], ++i) {
+      int index = length - i;
+      if (index < 0) return nullPath;
+      path[index] = at;
+    }
+
+    if (path[0] != start || path[length - 1] != end) {
+      return nullPath;
+    }
+
+    return path;
   }
 
   public Path findRoute(float x, float y, Location location) {
     int start = findNearestNode(x, y);
     int end = location2Index(location);
 
-    // TODO: Revert path inside dijkstra
     toggleDoor(location, true);
-    int[] nodePath = dijkstra(start, end);
+    int[] nodeIndexes = dijkstra(start, end);
     toggleDoor(location, false);
 
     Path path = new Path();
-    boolean validPath = false;
 
-    for (int at = end; at != -1; at = nodePath[at]) {
-      path.add(this.nodes[at]);
-      if (at == start) {
-        validPath = true;
-        break;
-      }
-    }
-
-    if (!validPath) {
-      return new Path();
-    }
-
-    for (int i = 0; i < path.size() / 2; ++i) {
-      int j = path.size() - i - 1;
-      Waypoint tmp = path.get(i);
-      path.set(i, path.get(j));
-      path.set(j, tmp);
+    for (int nodeIndex : nodeIndexes) {
+      path.add(this.nodes[nodeIndex]);
     }
 
     return path;
