@@ -1,49 +1,42 @@
 package arena;
 
-// TODO: Implement matrix of Nodes
 public class Node {
   public static enum Wall {
-    RIGHT,
-    UP,
-    LEFT,
-    DOWN
+    RIGHT(0),
+    UP(1),
+    LEFT(2),
+    DOWN(3);
+
+    byte bitmask = 0;
+
+    Wall(int index) {
+      this.bitmask += (1 << (index * 2));
+    }
+
+    protected byte getMask() {
+      return this.bitmask;
+    }
+  }
+  static byte toggledMask = 0;
+
+  static {
+    for (int i = 1; i < 8; i += 2) {
+      toggledMask += (1 << i);
+    }
   }
 
-  byte state;
-
-  static int wallToState(Wall wall) {
-    switch(wall) {
-      case RIGHT:
-        return 1;
-      case UP:
-        return 1 << 2;
-      case LEFT:
-        return 1 << 4;
-      case DOWN:
-        return 1 << 6;
-    }
-    return 0;
+  public void toggle() {
+    if ((state & toggledMask) != 0)
+      state >>= 1;
+    else
+      state <<= 1;
   }
 
   public boolean isOpen(Wall wall) {
-    return (state & wallToState(wall)) != 0;
+    return (state & wall.getMask()) != 0;
   }
 
-  static byte createState(
-    boolean right,
-    boolean up,
-    boolean left,
-    boolean down
-  ) {
-    byte state = 0;
-
-    if (right)  state += wallToState(Wall.RIGHT);
-    if (up)     state += wallToState(Wall.UP);
-    if (left)   state += wallToState(Wall.LEFT);
-    if (down)   state += wallToState(Wall.DOWN);
-
-    return state;
-  }
+  byte state = 0;
 
   public Node(
     boolean openRight,
@@ -51,6 +44,9 @@ public class Node {
     boolean openLeft,
     boolean openDown
   ) {
-    state = createState(openRight, openUp, openLeft, openDown);
+    if (openRight)  state += Wall.RIGHT.getMask();
+    if (openUp)     state += Wall.UP.getMask();
+    if (openLeft)   state += Wall.LEFT.getMask();
+    if (openDown)   state += Wall.DOWN.getMask();
   }
 }

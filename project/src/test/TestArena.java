@@ -4,36 +4,92 @@ import lejos.robotics.pathfinding.Path;
 import arena.Arena;
 
 public class TestArena extends Test {
-  static void testNode() {
-    for (int i = 0; i < 16; ++i) {
-      Node.Wall[] walls = {
-        Node.Wall.RIGHT,
-        Node.Wall.UP,
-        Node.Wall.LEFT,
-        Node.Wall.DOWN,
-      };
+  static class TestNode {
+    static Node.Wall[] walls = {
+      Node.Wall.RIGHT,
+      Node.Wall.UP,
+      Node.Wall.LEFT,
+      Node.Wall.DOWN,
+    };
 
-      boolean[] states = new boolean[]{
+    static boolean[] initStates(int i) {
+      return new boolean[]{
         (i & (1 << 0)) != 0,
         (i & (1 << 1)) != 0,
         (i & (1 << 2)) != 0,
         (i & (1 << 3)) != 0,
       };
+    }
 
-      Node node = new Node(states[0], states[1], states[2], states[3]);
+    static Node[] initNodes() {
+      Node[] nodes = new Node[16];
 
-      for (int j = 0; j < 4; ++j) {
-        String name = String.format(
-          "Node [%b %b %b %b], Wall %s",
-          states[0], states[1], states[2], states[3], walls[j].name()
-        );
-        if (!check(name, node.isOpen(walls[j]) == states[j])) return;
+      for (int i = 0; i < 16; ++i) {
+        boolean[] states = initStates(i);
+        nodes[i] = new Node(states[0], states[1], states[2], states[3]);
       }
 
-      passed(String.format(
-        "Node: %b %b %b %b",
-        states[0], states[1], states[2], states[3]
-      ));
+      return nodes;
+    }
+
+    static String stateMessage(int index) {
+      boolean[] states = initStates(index);
+      return String.format(
+        "Node %d [%b %b %b %b] ",
+        index, states[0], states[1], states[2], states[3]
+      );
+    }
+
+    static String wallMessage(Node.Wall w) {
+      return String.format("Wall %s ", w.name());
+    }
+
+    static void testIsOpen() {
+      String message = "Check Node doors. ";
+      Node[] nodes = initNodes();
+
+      for (int i = 0; i < nodes.length; ++i) {
+        boolean[] states = initStates(i);
+
+        for (int j = 0; j < 4; ++j) {
+          String msg = message;
+          msg += stateMessage(i);
+          msg += wallMessage(walls[j]);
+          if (!check(msg, nodes[i].isOpen(walls[j]) == states[j])) return;
+        }
+      }
+
+      passed(message);
+    }
+
+    static void testToggle() {
+      String message = "Check Node toggle. ";
+      Node[] nodes = initNodes();
+
+      for (int i = 0; i < nodes.length; ++i) {
+        boolean[] states = initStates(i);
+        Node node = nodes[i];
+
+        node.toggle();
+
+        for (int j = 0; j < walls.length; ++j) {
+          String msg = message + "All doors should be closed. ";
+          msg += stateMessage(i);
+          msg += wallMessage(walls[j]);
+          if (!check(msg, node.isOpen(walls[j]) == false)) return;
+        }
+
+        node.toggle();
+
+        for (int j = 0; j < walls.length; ++j) {
+          String msg = message + "All doors that were open previously should now be open as well. ";
+          msg += stateMessage(i);
+          msg += wallMessage(walls[j]);
+          if (!check(msg, node.isOpen(walls[j]) == states[j])) return;
+        }
+      }
+
+      passed(message);
     }
   }
 
@@ -72,6 +128,7 @@ public class TestArena extends Test {
   public static void main(String[] args) {
     name(TestArena.class.getSimpleName());
     testFindRoute();
-    testNode();
+    TestNode.testIsOpen();
+    TestNode.testToggle();
   }
 }
