@@ -1,15 +1,21 @@
 PROGRAM_DIR := src/main
 PROGRAM_NAME := Project
 PROGRAM := $(PROGRAM_DIR)/$(PROGRAM_NAME)
-PROGRAM_DEPS := $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/arena/,Arena.java PathFinder.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
 
 TEST_DIR := src/test
 TEST_NAME := Test
 TEST := $(TEST_DIR)/$(TEST_NAME)
-TEST_DEPS := $(addprefix $(TEST_DIR)/,TestDijkstra.java)
+
+COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/arena/,Node.java PathFinder.java)
+
+PROGRAM_DEPS := $(COMMON_DEPS)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/arena/,Arena.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
+
+TEST_DEPS := $(COMMON_DEPS)
+TEST_DEPS += $(addprefix $(TEST_DIR)/,TestDijkstra.java)
 
 UPFLAGS := -usb
 
