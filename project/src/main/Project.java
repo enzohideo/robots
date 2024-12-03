@@ -1,3 +1,4 @@
+import hardware.Hardware;
 import align.Align;
 import align.LightPID;
 import claw.Claw;
@@ -17,23 +18,10 @@ import lejos.robotics.navigation.Navigator;
 import sonar.Sonar;
 
 public class Project {
-  static SensorPort ultrasonicSensorPort = SensorPort.S2;
-
-  static MotorPort lMotorPort = MotorPort.A;
-  static MotorPort rMotorPort = MotorPort.C;
-  static MotorPort clawMotorPort = MotorPort.B;
-
-  static SensorPort lLightSensorPort = SensorPort.S3;
-  static SensorPort rLightSensorPort = SensorPort.S4;
-  static SensorPort clawColorSensorPort = SensorPort.S1;
-
   static Align align;
   static Sonar sonar;
   static Claw claw;
   static Deliver Deliver;
-
-  static double wheelDiameter = 6.0;
-  static double trackWidth = 12.0;
 
   static void sleep(long millis) {
     try {
@@ -44,21 +32,21 @@ public class Project {
   }
 
   public static void main(String[] args) {
-    UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(ultrasonicSensorPort);
+    UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Hardware.ultrasonicSensorPort);
 
-    NXTMotor lMotor = new NXTMotor(lMotorPort);
-    NXTMotor rMotor = new NXTMotor(rMotorPort);
+    NXTMotor lMotor = new NXTMotor(Hardware.lMotorPort);
+    NXTMotor rMotor = new NXTMotor(Hardware.rMotorPort);
 
-    LightSensor lLightSensor = new LightSensor(lLightSensorPort);
-    LightSensor rLightSensor = new LightSensor(rLightSensorPort);
-    ColorSensor clawColorSensor = new ColorSensor(clawColorSensorPort);
+    LightSensor lLightSensor = new LightSensor(Hardware.lLightSensorPort);
+    LightSensor rLightSensor = new LightSensor(Hardware.rLightSensorPort);
+    ColorSensor clawColorSensor = new ColorSensor(Hardware.clawColorSensorPort);
 
-    NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(lMotorPort);
-    NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(rMotorPort);
-    NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(clawMotorPort);
+    NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(Hardware.lMotorPort);
+    NXTRegulatedMotor rRegulatedMotor = new NXTRegulatedMotor(Hardware.rMotorPort);
+    NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(Hardware.clawMotorPort);
 
     DifferentialPilot pilot = new DifferentialPilot(
-      wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, false
+      Hardware.wheelDiameter, Hardware.trackWidth, lRegulatedMotor, rRegulatedMotor, false
     );
     Navigator navigator = new Navigator(pilot);
 
@@ -112,7 +100,7 @@ public class Project {
       LCD.drawString("ALIGN W/ RED", 0, 0);
       align.run(300, 300); // TODO: Improve red line callibration
 
-      double y = trackWidth / 2;
+      double y = Hardware.trackWidth / 2;
       pilot.travel(-y);
       pilot.rotate(-89);
 
