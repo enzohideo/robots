@@ -10,7 +10,7 @@ public class Test {
   static int failedCount = 0;
   static Stack<Iteration> iterations = new Stack<Iteration>();
 
-  static String separator = "%s============= %s =============%s\n";
+  static String separator = "%s%s %s\n";
 
   static class Iteration {
     protected boolean success = true;
@@ -41,10 +41,12 @@ public class Test {
     }
 
     public boolean result() {
-      System.out.printf(separator.replace('=', '-'), YELLOW, "Summary - " + this.name, CLEAR);
-      System.out.printf("%sPASSED: %d\n", GREEN, passedCount);
-      System.out.printf("%sFAILED: %d%s\n", RED, failedCount, CLEAR);
-      return failedCount == 0;
+      if (success)
+        System.out.printf(separator, GREEN, "PASSED " + passedCount + " - " + name, CLEAR);
+      else
+        System.out.printf(separator, RED, "FAILED " + failedCount + " - " + name, CLEAR);
+
+      return success;
     }
   }
 
@@ -67,7 +69,6 @@ public class Test {
   }
 
   static public void start(String testName) {
-    System.out.printf(separator, YELLOW, "Test - " + testName, CLEAR);
     iterations.push(new Iteration(testName));
   }
 
@@ -79,7 +80,8 @@ public class Test {
 
   public static void main(String[] args) {
     start("All");
-    TestDeliver.main(args);
+    TestArena.main(args);
+    TestNode.main(args);
     end();
   }
 }
