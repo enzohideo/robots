@@ -45,6 +45,8 @@ public class TestDeliver extends Test {
     }
 
     static void testIsOpen() {
+      start("method isOpen()");
+
       String message = "Check Node doors. ";
       Node[] nodes = initNodes();
 
@@ -59,10 +61,12 @@ public class TestDeliver extends Test {
         }
       }
 
-      passed(message);
+      end();
     }
 
     static void testToggle() {
+      start("method toggle()");
+
       String message = "Check Node toggle. ";
       Node[] nodes = initNodes();
 
@@ -73,27 +77,49 @@ public class TestDeliver extends Test {
         node.toggle();
 
         for (int j = 0; j < walls.length; ++j) {
-          String msg = message + "All doors should be closed. ";
+          String msg = message + "All doors should be closed after toggle(). ";
           msg += stateMessage(i);
           msg += wallMessage(walls[j]);
-          if (!check(msg, node.isOpen(walls[j]) == false)) return;
+          check(msg, node.isOpen(walls[j]) == false);
         }
+        check(String.format("All doors should be closed. %s", stateMessage(i)), node.isClosed());
 
         node.toggle();
 
         for (int j = 0; j < walls.length; ++j) {
-          String msg = message + "All doors that were open previously should now be open as well. ";
+          String msg = message + "Some doors should be open after toggle(). ";
           msg += stateMessage(i);
           msg += wallMessage(walls[j]);
-          if (!check(msg, node.isOpen(walls[j]) == states[j])) return;
+          check(msg, node.isOpen(walls[j]) == states[j]);
+        }
+
+        node.close();
+
+        for (int j = 0; j < walls.length; ++j) {
+          String msg = message + "All doors should be closed after close(). ";
+          msg += stateMessage(i);
+          msg += wallMessage(walls[j]);
+          check(msg, node.isOpen(walls[j]) == false);
+        }
+        check(String.format("All doors should be closed. %s", stateMessage(i)), node.isClosed());
+
+        node.open();
+
+        for (int j = 0; j < walls.length; ++j) {
+          String msg = message + "Some doors should be open after open(). ";
+          msg += stateMessage(i);
+          msg += wallMessage(walls[j]);
+          check(msg, node.isOpen(walls[j]) == states[j]);
         }
       }
 
-      passed(message);
+      end();
     }
   }
 
   static void testFindRoute() {
+    start("method findRoute()");
+
     Arena arena = new Arena();
 
     double[][] answer = {
@@ -107,8 +133,7 @@ public class TestDeliver extends Test {
 
     Path result = arena.findRoute(0, 0, Arena.Location.DRUGSTORE);
 
-    if (!check("path has right length", answer.length == result.size()))
-      return;
+    check("path has right length", answer.length == result.size());
 
     for (int i = 0; i < result.size(); ++i) {
       Waypoint waypoint = result.get(i);
@@ -118,17 +143,18 @@ public class TestDeliver extends Test {
       double expectedX = answer[i][0];
       double expectedY = answer[i][1];
 
-      if (!check("coordinate X is the same", x - expectedX < 1e-8)) return;
-      if (!check("coordinate Y is the same", y - expectedY < 1e-8)) return;
+      check("coordinate X is the same", x - expectedX < 1e-8);
+      check("coordinate Y is the same", y - expectedY < 1e-8);
     }
 
-    passed("Dijkstra finds path to drugstore");
+    end();
   }
 
   public static void main(String[] args) {
-    name(TestDeliver.class.getSimpleName());
+    start("Deliver");
     testFindRoute();
     TestNode.testIsOpen();
     TestNode.testToggle();
+    end();
   }
 }
