@@ -10,6 +10,7 @@ public class Hardware {
   public static MotorPort rMotorPort = MotorPort.C;
   public static MotorPort clawMotorPort = MotorPort.B;
 
+  public static SensorPort compassPort = SensorPort.S4;
   public static SensorPort lLightSensorPort = SensorPort.S3;
   public static SensorPort rLightSensorPort = SensorPort.S4;
   public static SensorPort clawColorSensorPort = SensorPort.S1;

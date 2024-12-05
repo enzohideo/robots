@@ -10,7 +10,7 @@ COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Node.java Arena.java)
 
 PROGRAM_DEPS := $(COMMON_DEPS)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/hardware/,Hardware.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java ColorPID.java LightPID.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java CompassAlign.java ColorPID.java LightPID.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Deliver.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)
@@ -54,6 +54,16 @@ Sonar.nxj: $(PROGRAM_DIR)/sonar/Sonar.class $(PROGRAM_DEPS)
 	nxjlink -o $@ sonar/Sonar --classpath $(PROGRAM_DIR)
 
 sonar: Sonar.nxj
+
+# ===================================================== #
+
+$(PROGRAM_DIR)/align/CompassAlign.class: $(PROGRAM_DIR)/align/CompassAlign.java $(PROGRAM_DEPS)
+	nxjc $^
+
+CompassAlign.nxj: $(PROGRAM_DIR)/align/CompassAlign.class $(PROGRAM_DEPS)
+	nxjlink -o $@ align/CompassAlign --classpath $(PROGRAM_DIR)
+
+compass: CompassAlign.nxj
 	nxjupload $(UPFLAGS) -r $<
 
 # ===================================================== #
