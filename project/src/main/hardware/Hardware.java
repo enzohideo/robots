@@ -1,5 +1,6 @@
 package hardware;
 
+import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
 import lejos.nxt.SensorPort;
 
@@ -16,5 +17,14 @@ public class Hardware {
   public static SensorPort clawColorSensorPort = SensorPort.S1;
 
   public static double wheelDiameter = 5.6;
-  public static double trackWidth = 11.5;
+  public static double trackWidth = 11.6;
+
+  public static void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      LCD.drawString("Failed to sleep", 0, 0);
+    }
+  }
+
 }
