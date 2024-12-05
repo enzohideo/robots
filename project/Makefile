@@ -66,6 +66,7 @@ Sonar.nxj: $(PROGRAM_DIR)/sonar/Sonar.class $(PROGRAM_DEPS)
 	nxjlink -o $@ sonar/Sonar --classpath $(PROGRAM_DIR)
 
 sonar: Sonar.nxj
+	nxjupload $(UPFLAGS) -r $<
 
 # ===================================================== #
 
