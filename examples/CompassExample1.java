@@ -16,20 +16,22 @@ class CompassExample1 {
 
   public static void main(String[] args) {
     CompassHTSensor compass = new CompassHTSensor(compassPort);
-    DifferentialPilot pilot = new DifferentialPilot(6, 12, leftMotor, rightMotor);
+    DifferentialPilot pilot = new DifferentialPilot(5.6, 11.5, leftMotor, rightMotor);
 
     LCD.drawString("Calibrating", 0, 0);
     compass.startCalibration();
-    pilot.setRotateSpeed(360 / 20);
-    pilot.rotate(520);
+    pilot.setRotateSpeed(360 / 20 * 2);
+    pilot.rotate(360 * 2, false);
     compass.stopCalibration();
     LCD.clear();
 
     while(true) {
       LCD.drawString("Heading", 0, 0);
+      LCD.clear(1);
       LCD.drawString(Float.toString(compass.getDegrees()), 0, 1);
 
       LCD.drawString("Cartesian", 0, 3);
+      LCD.clear(4);
       LCD.drawString(Float.toString(compass.getDegreesCartesian()), 0, 4);
     }
   }
