@@ -90,7 +90,7 @@ public class Project {
       pilot.rotate(89, false);
       pilot.travel(5, false);
 
-      int color = claw.run(true);
+      Claw.Color color = claw.run(true);
       claw.run(false);
       LCD.drawString("CLAW COLOR " + color, 0, 0);
 

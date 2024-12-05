@@ -36,6 +36,18 @@ run: $(PROGRAM).nxj
 
 # ===================================================== #
 
+$(PROGRAM_DIR)/claw/Claw.class: $(PROGRAM_DIR)/claw/Claw.java $(PROGRAM_DEPS)
+	nxjc $^
+
+Claw.nxj: $(PROGRAM_DIR)/claw/Claw.class $(PROGRAM_DEPS)
+	nxjlink -o $@ claw/Claw --classpath $(PROGRAM_DIR)
+
+claw: Claw.nxj
+	nxjupload $(UPFLAGS) -r $<
+
+
+# ===================================================== #
+
 $(PROGRAM_DIR)/deliver/Deliver.class: $(PROGRAM_DIR)/deliver/Deliver.java $(PROGRAM_DEPS)
 	nxjc $^
 
