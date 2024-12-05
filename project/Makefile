@@ -47,6 +47,17 @@ deliver: Deliver.nxj
 
 # ===================================================== #
 
+$(PROGRAM_DIR)/sonar/Sonar.class: $(PROGRAM_DIR)/sonar/Sonar.java $(PROGRAM_DEPS)
+	nxjc $^
+
+Sonar.nxj: $(PROGRAM_DIR)/sonar/Sonar.class $(PROGRAM_DEPS)
+	nxjlink -o $@ sonar/Sonar --classpath $(PROGRAM_DIR)
+
+sonar: Sonar.nxj
+	nxjupload $(UPFLAGS) -r $<
+
+# ===================================================== #
+
 $(TEST).class: $(TEST).java $(TEST_DEPS) $(PROGRAM_DEPS)
 	nxjpcc -cp '$(PROGRAM_DIR):$(TEST_DIR)' $(TEST).java $(TEST_DEPS)
 

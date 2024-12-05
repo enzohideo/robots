@@ -1,7 +1,9 @@
 package sonar;
 
+import hardware.Hardware;
 import java.util.Arrays;
 
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.UltrasonicSensor;
@@ -18,7 +20,7 @@ public class Sonar {
 
   // TODO: Distinguish short from tall pipes
   private float[] shortPipeThreshold = { 80f, 24f };
-  private float[] tallPipeThreshold = { 25f, 16f };
+  private float[] tallPipeThreshold = { 35f, 16f };
 
   private int power = 25;
 
@@ -145,5 +147,15 @@ public class Sonar {
         } while (distance > this.shortPipeThreshold[1]);
         break;
     }
+  }
+
+  public static void main(String[] args) {
+    UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Hardware.ultrasonicSensorPort);
+    NXTMotor lMotor = new NXTMotor(Hardware.lMotorPort);
+    NXTMotor rMotor = new NXTMotor(Hardware.rMotorPort);
+    Sonar sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
+    Button.waitForAnyPress();
+    sonar.run();
+    Button.waitForAnyPress();
   }
 }
