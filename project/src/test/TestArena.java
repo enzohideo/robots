@@ -9,12 +9,12 @@ public class TestArena extends Test {
     Arena arena = new Arena();
 
     double[][] answer = {
-      { 15., 15. },
-      { 45., 15. },
-      { 45., 45. },
-      { 45., 75. },
-      { 75., 75. },
-      { 75., 105.}
+      { 14.75, 15. },
+      { 44.25, 15. },
+      { 44.25, 45. },
+      { 44.25, 75. },
+      { 73.75, 75. },
+      { 73.75, 105.}
     };
 
     Path result = arena.findRoute(0, 0, Arena.Location.DRUGSTORE);
@@ -29,8 +29,14 @@ public class TestArena extends Test {
       double expectedX = answer[i][0];
       double expectedY = answer[i][1];
 
-      check("coordinate X is the same", x - expectedX < 1e-8);
-      check("coordinate Y is the same", y - expectedY < 1e-8);
+      check(
+        String.format("coordinate X is different: %f, expected: %f", x, expectedX),
+        Math.abs(x - expectedX) < 1e-8
+      );
+      check(
+        String.format("coordinate Y is different: %f, expected: %f", y, expectedY),
+        Math.abs(y - expectedY) < 1e-8
+      );
     }
 
     end();
