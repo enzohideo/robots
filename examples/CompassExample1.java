@@ -10,7 +10,7 @@ import lejos.robotics.navigation.DifferentialPilot;
 // make 1.5 to 2 full rotations. Must call stopCalibration() when done."
 
 class CompassExample1 {
-  static SensorPort compassPort = SensorPort.S1;
+  static SensorPort compassPort = SensorPort.S4;
   static NXTRegulatedMotor leftMotor = Motor.A;
   static NXTRegulatedMotor rightMotor = Motor.C;
 
@@ -23,6 +23,12 @@ class CompassExample1 {
     pilot.setRotateSpeed(360 / 20 * 2);
     pilot.rotate(360 * 2, false);
     compass.stopCalibration();
+    try {
+      Thread.sleep(2000);
+    } catch(InterruptedException error) {
+      LCD.drawString("failed to sleep", 0, 1);
+    }
+    compass.resetCartesianZero();
     LCD.clear();
 
     while(true) {
