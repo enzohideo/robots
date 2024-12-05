@@ -1,33 +1,39 @@
 package align;
 
+import java.util.Arrays;
 import lejos.nxt.LightSensor;
+import hardware.Hardware;
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
-import lejos.nxt.NXTMotor;
+import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 
 public class IdentifyLine {
-  LightSensor sensor; 
-  //NXTMotor motorLeft;
-  //NXTMotor motorRight;
+  LightSensor sensor;
   DifferentialPilot pilot;
-  int white = 60;
 
   void setFloodlight(boolean floodlight) {
     this.sensor.setFloodlight(floodlight);
   }
 
-  public void run() {
+  public void run(int lineColor) {
     setFloodlight(true);
+    int[] lightValues = new int[8];
+    Arrays.fill(lightValues, 60);
+    int index = 0;
 
     pilot.forward();
-    while (sensor.getLightValue() > white) {}
+    int lightSum = 60 * lightValues.length;
+    double lightAvg;
+    do {
+        int lightValue = sensor.getLightValue();
+        lightSum = lightSum + lightValue - lightValues[index];
+        lightValues[index++] = lightValue;
+        index = index % lightValues.length;
+        lightAvg = lightSum / lightValues.length;
+        LCD.drawString("light " + lightAvg, 0, 0);
+    } while (lightAvg > lineColor);
     pilot.stop();
-    /*boolean leftHasEnded = false;
-
-    while(!leftHasEnded) {
-      if (!leftHasEnded && lLightPID.run(lMiddle))
-        leftHasEnded = true;
-    }*/
 
     setFloodlight(false);
   }
@@ -35,8 +41,24 @@ public class IdentifyLine {
   public IdentifyLine(LightSensor sensor, DifferentialPilot pilot) { // NXTMotor motorLeft, NXTMotor motorRight
     this.sensor = sensor;
     this.pilot = pilot;
-    //this.motorLeft = motorLeft;
-    //this.motorRight = motorRight;
     setFloodlight(false);
+  }
+
+  public static void main(String[] args) {
+    NXTRegulatedMotor lMotor = new NXTRegulatedMotor(Hardware.lMotorPort);
+    NXTRegulatedMotor rMotor = new NXTRegulatedMotor(Hardware.rMotorPort);
+    DifferentialPilot pilot = new DifferentialPilot(
+      Hardware.wheelDiameter, Hardware.trackWidth, lMotor, rMotor
+    );
+    LightSensor sensor = new LightSensor(Hardware.lLightSensorPort);
+    IdentifyLine idline = new IdentifyLine(sensor, pilot);
+    
+    pilot.setRotateSpeed(40);
+    pilot.setTravelSpeed(5);
+
+    Button.waitForAnyPress();
+    idline.run(45);
+    Button.waitForAnyPress();
+    
   }
 }
