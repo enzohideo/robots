@@ -97,13 +97,14 @@ public class Arena {
 
   void initNodes() {
     this.nodes = new Waypoint[25];
-    double initialValue = 15.0;
+    double initialXValue = 15.0;
+    double initialYValue = 29.5 / 2;
 
     for (int i = 0; i < 5; ++i) {
       for (int j = 0; j < 5; ++j) {
         this.nodes[i*5 + j] = new Waypoint(
-          initialValue + j * 30.0,
-          initialValue + i * 30.0
+          initialYValue + j * 29.5,
+          initialXValue + i * 30.0
         );
       }
     }
