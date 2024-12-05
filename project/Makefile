@@ -70,6 +70,17 @@ sonar: Sonar.nxj
 
 # ===================================================== #
 
+$(PROGRAM_DIR)/align/IdentifyLine.class: $(PROGRAM_DIR)/align/IdentifyLine.java $(PROGRAM_DEPS)
+	nxjc $^
+
+IdentifyLine.nxj: $(PROGRAM_DIR)/align/IdentifyLine.class $(PROGRAM_DEPS)
+	nxjlink -o $@ align/IdentifyLine --classpath $(PROGRAM_DIR)
+
+identifyline: IdentifyLine.nxj
+	nxjupload $(UPFLAGS) -r $<
+
+# ===================================================== #
+
 $(PROGRAM_DIR)/align/CompassAlign.class: $(PROGRAM_DIR)/align/CompassAlign.java $(PROGRAM_DEPS)
 	nxjc $^
 
