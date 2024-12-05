@@ -81,7 +81,7 @@ public class Project {
 
     idLine = new IdentifyLine(lLightSensor, pilot);
     compass = new CompassAlign(compassHT, pilot);
-    sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
+    sonar = new Sonar(ultrasonicSensor, pilot);
     claw = new Claw(clawMotor, clawColorSensor);
     Deliver = new Deliver(navigator);
 
@@ -90,10 +90,15 @@ public class Project {
     compass.calibrate();
 
     while(true) {
-      LCD.drawString("START", 0, 0);
+      idLine.run(45);
 
-      LCD.drawString("WAITING", 0, 0);
-      sleep(1000);
+      pilot.setRotateSpeed(40);
+      pilot.rotate(-90);
+
+      idLine.run(45);
+
+      pilot.setRotateSpeed(40);
+      pilot.rotate(-90);
 
       Sonar.Pipe pipe = sonar.run();
       LCD.drawString("PIPE: " + pipe.name(), 0, 1);
@@ -101,29 +106,24 @@ public class Project {
       pilot.quickStop();
       pilot.setRotateSpeed(40);
       pilot.setTravelSpeed(5);
-      pilot.rotate(89, false);
+      pilot.rotate(90, false);
       pilot.travel(5, false);
 
       Claw.Color color = claw.run(true);
-      claw.run(false);
-      LCD.drawString("CLAW COLOR " + color, 0, 0);
+      LCD.drawString("CLAW COLOR " + color, 0, 2);
 
       pilot.travel(-10);
-      pilot.rotate(89);
+      // pilot.rotate(90);
 
       Pose pose = navigator.getPoseProvider().getPose();
-      LCD.drawString("X" + pose.getX(), 0, 2);
-      LCD.drawString("Y" + pose.getY(), 0, 3);
+      LCD.drawString("X" + pose.getX(), 0, 3);
+      LCD.drawString("Y" + pose.getY(), 0, 4);
 
-      //LCD.drawString("ALIGN W/ Black", 0, 0);
-      //idLine.run();
+      // Button.waitForAnyPress();
 
       double y = Hardware.trackWidth / 2;
       pilot.travel(-y);
       pilot.rotate(-89);
-
-      //LCD.drawString("ALIGN W/ BLUE", 0, 0);
-      //idLine.run();
 
       pilot.rotate(89);
 

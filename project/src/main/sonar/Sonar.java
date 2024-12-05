@@ -6,7 +6,9 @@ import java.util.Arrays;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
+import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
+import lejos.robotics.navigation.DifferentialPilot;
 
 public class Sonar {
   public enum Pipe {
@@ -15,8 +17,7 @@ public class Sonar {
 
   private UltrasonicSensor sonar;
 
-  private NXTMotor lMotor;
-  private NXTMotor rMotor;
+  DifferentialPilot pilot;
 
   // TODO: Distinguish short from tall pipes
   private float[] shortPipeThreshold = { 80f, 24f };
@@ -68,33 +69,25 @@ public class Sonar {
   }
   Distances distances;
 
-  public Sonar(UltrasonicSensor sonar, NXTMotor lMotor, NXTMotor rMotor) {
+  public Sonar(UltrasonicSensor sonar, DifferentialPilot pilot) {
     this.distances = new Distances(32);
     this.sonar = sonar;
-    this.lMotor = lMotor;
-    this.rMotor = rMotor;
-    this.sonar.off();
+    this.pilot = pilot;
+    this.sonar.continuous();
   }
 
   public Pipe run() {
-    this.rMotor.setPower(power);
-    this.lMotor.setPower(power);
+    this.pilot.setTravelSpeed(5);
+    this.pilot.forward();
     this.sonar.continuous();
 
-    Pipe pipe;
-    // while (true) {
-      pipe = earlyDetection();
-    //   if (false) break;
-    // }
-
-    // LCD.drawString("FOUND " + pipe.name(), 0, 1);
+    Pipe pipe = earlyDetection();
 
     // 2nd stage: Alignment with the pipe.
     // Walk forward until it's next to the pipe
     lateDetection(pipe);
 
-    this.rMotor.setPower(0);
-    this.lMotor.setPower(0);
+    this.pilot.stop();
     this.sonar.off();
 
     return pipe;
@@ -151,9 +144,12 @@ public class Sonar {
 
   public static void main(String[] args) {
     UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Hardware.ultrasonicSensorPort);
-    NXTMotor lMotor = new NXTMotor(Hardware.lMotorPort);
-    NXTMotor rMotor = new NXTMotor(Hardware.rMotorPort);
-    Sonar sonar = new Sonar(ultrasonicSensor, lMotor, rMotor);
+    NXTRegulatedMotor lMotor = new NXTRegulatedMotor(Hardware.lMotorPort);
+    NXTRegulatedMotor rMotor = new NXTRegulatedMotor(Hardware.rMotorPort);
+    DifferentialPilot pilot = new DifferentialPilot(
+      Hardware.wheelDiameter, Hardware.trackWidth, lMotor, rMotor
+    );
+    Sonar sonar = new Sonar(ultrasonicSensor, pilot);
     Button.waitForAnyPress();
     sonar.run();
     Button.waitForAnyPress();
