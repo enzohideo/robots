@@ -14,6 +14,6 @@ public class Hardware {
   public static SensorPort rLightSensorPort = SensorPort.S4;
   public static SensorPort clawColorSensorPort = SensorPort.S1;
 
-  public static double wheelDiameter = 6.0;
-  public static double trackWidth = 12.0;
+  public static double wheelDiameter = 5.6;
+  public static double trackWidth = 11.5;
 }
