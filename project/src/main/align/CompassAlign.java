@@ -1,14 +1,17 @@
 package align;
 
 import hardware.Hardware;
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.DifferentialPilot;
 
 public class CompassAlign {
-  static float maxDegreesError = 0.5f;
-  static int rotateSpeed = 10;
-  static int calibrationRotateSpeed = 360 / 20;
+  static float maxDegreesError = 0.05f;
+  static int rotateSpeed = 5;
+  static int calibrationRotateSpeed = 360 / 10;
+  static int waitForCompassToSettle = 1250;
 
   CompassHTSensor compass;
   DifferentialPilot pilot;
@@ -26,6 +29,7 @@ public class CompassAlign {
     pilot.quickStop();
 
     compass.stopCalibration();
+    Hardware.sleep(waitForCompassToSettle); // wait compass to settle
     compass.resetCartesianZero();
   }
 
@@ -33,12 +37,23 @@ public class CompassAlign {
     return (degrees > 0 ? 1 : 0) - (degrees < 0 ? 1 : 0);
   }
 
-  public void run() {
+  float getDegrees() {
     float degrees = compass.getDegreesCartesian();
+    if (degrees > 180) {
+      degrees -= 360f;
+    }
+    return degrees;
+  }
+
+  public void run() {
+    float degrees = getDegrees();
     pilot.setRotateSpeed(rotateSpeed);
     while(Math.abs(degrees) > maxDegreesError) {
-      pilot.rotate(- degrees * 0.5);
-      degrees = compass.getDegreesCartesian();
+      LCD.clear(0);
+      LCD.drawString("degrees: " + degrees, 0, 0);
+      pilot.rotate(- degrees);
+      Hardware.sleep(waitForCompassToSettle);
+      degrees = getDegrees();
     }
   }
 
@@ -50,7 +65,13 @@ public class CompassAlign {
     );
     CompassHTSensor compass = new CompassHTSensor(Hardware.compassPort);
     CompassAlign align = new CompassAlign(compass, pilot);
+
+    Button.waitForAnyPress();
     align.calibrate();
-    align.run();
+
+    while (true) {
+      Button.waitForAnyPress();
+      align.run();
+    }
   }
 }
