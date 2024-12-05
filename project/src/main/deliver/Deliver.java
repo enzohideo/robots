@@ -3,6 +3,7 @@ package deliver;
 import deliver.Arena.Location;
 import hardware.Hardware;
 import lejos.nxt.Button;
+import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
@@ -33,7 +34,17 @@ public class Deliver {
     DifferentialPilot pilot = new DifferentialPilot(
       Hardware.wheelDiameter, Hardware.trackWidth, lRegulatedMotor, rRegulatedMotor, true
     );
+
+    pilot.setRotateSpeed(40);
+    pilot.setTravelSpeed(10);
+
     Navigator navigator = new Navigator(pilot);
-    (new Deliver(navigator)).run(0, 0, Location.MUSEUM);
+    Deliver deliver = new Deliver(navigator);
+
+    for (Location location : Arena.Location.values()) {
+      LCD.drawString("Location " + location.name(), 0, 0);
+      Button.waitForAnyPress();
+      deliver.run(0, 0, location);
+    }
   }
 }
