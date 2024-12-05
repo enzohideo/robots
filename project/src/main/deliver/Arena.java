@@ -25,7 +25,8 @@ public class Arena {
     BAKERY(new int[][]{{16, 15}, {20, 15}}),
     SCHOOL(new int[][]{{6, 5}, {10, 5}}),
     CITYHALL(new int[][]{{8, 7}, {6, 7}}),
-    LIBRARY(new int[][]{{4, 9}, {8, 9}});
+    LIBRARY(new int[][]{{4, 9}, {8, 9}}),
+    PARK(new int[][]{{22, 27}}); //{20, 25}, , {24, 29}
 
     private final int[][] positions;
 
@@ -39,10 +40,10 @@ public class Arena {
   }
 
   void initAdjMatrix() {
-    this.adjMatrix = new boolean[25][25];
+    this.adjMatrix = new boolean[30][30];
 
-    for(int i = 0; i < 25; i++) {
-      for(int j = 0; j < 25; j++) {
+    for(int i = 0; i < 30; i++) {
+      for(int j = 0; j < 30; j++) {
         this.adjMatrix[i][j] = false;
       }
     }
@@ -96,12 +97,12 @@ public class Arena {
   }
 
   void initNodes() {
-    this.nodes = new Waypoint[25];
+    this.nodes = new Waypoint[30];
     double initialXValue = 15.0;
     double initialYValue = 29.5 / 2;
 
     for (int i = 0; i < 5; ++i) {
-      for (int j = 0; j < 5; ++j) {
+      for (int j = 0; j < 6; ++j) {
         this.nodes[i*5 + j] = new Waypoint(
           initialYValue + j * 29.5,
           initialXValue + i * 30.0
@@ -125,6 +126,8 @@ public class Arena {
         return 17;
       case MUSEUM:
         return 19;
+      case PARK:
+        return 27;
       }
     return -1;
   }

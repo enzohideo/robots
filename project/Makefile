@@ -10,7 +10,7 @@ COMMON_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Node.java Arena.java)
 
 PROGRAM_DEPS := $(COMMON_DEPS)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/hardware/,Hardware.java)
-PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java CompassAlign.java ColorPID.java LightPID.java)
+PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/align/,Align.java IdentifyLine.java CompassAlign.java ColorPID.java LightPID.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/deliver/,Deliver.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/claw/,Claw.java)
 PROGRAM_DEPS += $(addprefix $(PROGRAM_DIR)/sonar/,Sonar.java)

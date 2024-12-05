@@ -133,12 +133,19 @@ public class Claw {
 
   Color getColor() {
     //ColorSensor.Color[] colors = ColorSensor.Color[20];
-    /*int colors[] = {0, 0, 0, 0, 0};
-
+    int colors[] = {0, 0, 0, 0, 0};
+     
     int max = 10;
     int i = 0;
     while(i < max) {
       i += 1;
+      int id = colorSensor.getColorID();
+      if (id > 3) {
+        id = 4;
+      }
+      colors[id] += 1;
+    }
+      /* 
       ColorSensor.Color color = colorSensor.getColor();
       int r = color.getRed();
       int b = color.getBlue();
@@ -167,7 +174,7 @@ public class Claw {
         }
         colors[index] += 1;
       }
-    }
+    }*/
     int max_index = -1;
     int max_value = -1;
     for (int j = 0; j < 5; j++) {
@@ -175,12 +182,13 @@ public class Claw {
         max_value = colors[j];
         max_index = j;
       }
-    }*/
+    }
 
-    int id = colorSensor.getColorID();
-    LCD.drawString(Integer.toString(id), 0, 6);
+    //int id = colorSensor.getColorID();
+    
+    //LCD.drawString(Integer.toString(id), 0, 6);
 
-    switch (id) {
+    switch (max_index) {
       case 0:
         return Color.RED;
       case 1:
