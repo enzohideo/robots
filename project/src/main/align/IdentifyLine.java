@@ -22,7 +22,9 @@ public class IdentifyLine {
     Arrays.fill(lightValues, 60);
     int index = 0;
 
+    pilot.setTravelSpeed(5);
     pilot.forward();
+
     int lightSum = 60 * lightValues.length;
     double lightAvg;
     do {
@@ -33,6 +35,7 @@ public class IdentifyLine {
         lightAvg = lightSum / lightValues.length;
         LCD.drawString("light " + lightAvg, 0, 0);
     } while (lightAvg > lineColor);
+
     pilot.stop();
 
     setFloodlight(false);
