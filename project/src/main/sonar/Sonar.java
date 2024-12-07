@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
-import lejos.nxt.NXTMotor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.DifferentialPilot;
@@ -151,7 +150,19 @@ public class Sonar {
     );
     Sonar sonar = new Sonar(ultrasonicSensor, pilot);
     Button.waitForAnyPress();
-    sonar.run();
-    Button.waitForAnyPress();
+
+    Pipe pipe = sonar.run();
+
+    pilot.quickStop();
+    pilot.setRotateSpeed(40);
+    pilot.setTravelSpeed(5);
+
+    if (pipe == Sonar.Pipe.SHORT) {
+      pilot.travel(5, false);
+    } else {
+      pilot.travel(5, false);
+    }
+
+    pilot.rotate(90, false);
   }
 }
