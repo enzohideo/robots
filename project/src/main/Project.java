@@ -1,14 +1,12 @@
 import hardware.Hardware;
 import align.IdentifyLine;
 import align.CompassAlign;
-//import align.LightPID;
 import claw.Claw;
 import deliver.Arena;
 import deliver.Deliver;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.NXTMotor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
@@ -55,11 +53,7 @@ public class Project {
   public static void main(String[] args) {
     UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Hardware.ultrasonicSensorPort);
 
-    NXTMotor lMotor = new NXTMotor(Hardware.lMotorPort);
-    NXTMotor rMotor = new NXTMotor(Hardware.rMotorPort);
-
     LightSensor lLightSensor = new LightSensor(Hardware.lLightSensorPort);
-    //LightSensor rLightSensor = new LightSensor(Hardware.rLightSensorPort);
     ColorSensor clawColorSensor = new ColorSensor(Hardware.clawColorSensorPort);
 
     NXTRegulatedMotor lRegulatedMotor = new NXTRegulatedMotor(Hardware.lMotorPort);
