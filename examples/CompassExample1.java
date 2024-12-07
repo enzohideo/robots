@@ -20,25 +20,27 @@ class CompassExample1 {
 
     LCD.drawString("Calibrating", 0, 0);
     compass.startCalibration();
-    pilot.setRotateSpeed(360 / 20 * 2);
-    pilot.rotate(360 * 2, false);
+    pilot.setRotateSpeed(360 / 10); // 10 seconds per rotation
+    pilot.rotate(360 * 1.5);        // 1.5 rotations
     compass.stopCalibration();
+
     try {
       Thread.sleep(2000);
     } catch(InterruptedException error) {
-      LCD.drawString("failed to sleep", 0, 1);
+      LCD.drawString("Failed to sleep", 0, 0);
     }
+
     compass.resetCartesianZero();
+
     LCD.clear();
+    LCD.drawString("Heading", 0, 0);
+    LCD.drawString("Cartesian", 0, 2);
 
     while(true) {
-      LCD.drawString("Heading", 0, 0);
       LCD.clear(1);
+      LCD.clear(3);
       LCD.drawString(Float.toString(compass.getDegrees()), 0, 1);
-
-      LCD.drawString("Cartesian", 0, 3);
-      LCD.clear(4);
-      LCD.drawString(Float.toString(compass.getDegreesCartesian()), 0, 4);
+      LCD.drawString(Float.toString(compass.getDegreesCartesian()), 0, 3);
     }
   }
 }
