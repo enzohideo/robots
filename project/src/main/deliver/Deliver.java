@@ -19,12 +19,9 @@ public class Deliver {
     this.deliver = new Arena();
   }
 
-  public void run(float x, float y, Location location) {
-    Path path = this.deliver.findRoute(x, y, location);
-    navigator.getPoseProvider().setPose(new Pose(x, y, 0));
-    navigator.clearPath();
-    navigator.followPath(path);
-    navigator.waitForStop();
+  // TODO: Try generator function
+  public Path run(float x, float y, Location location) {
+    return this.deliver.findRoute(x, y, location);
   }
 
   public static void main(String[] args) {
@@ -44,7 +41,11 @@ public class Deliver {
     for (Location location : Arena.Location.values()) {
       LCD.drawString("Location " + location.name(), 0, 0);
       Button.waitForAnyPress();
-      deliver.run(0, 0, location);
+      Path path = deliver.run(0, 0, location);
+      navigator.getPoseProvider().setPose(new Pose(0, 0, 0));
+      navigator.clearPath();
+      navigator.followPath(path);
+      navigator.waitForStop();
     }
   }
 }

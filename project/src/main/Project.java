@@ -1,23 +1,21 @@
 import hardware.Hardware;
-import align.Align;
 import align.IdentifyLine;
 import align.CompassAlign;
 //import align.LightPID;
 import claw.Claw;
 import deliver.Arena;
 import deliver.Deliver;
-import deliver.Arena.Location;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
 import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import sonar.Sonar;
@@ -74,10 +72,10 @@ public class Project {
     );
     Navigator navigator = new Navigator(pilot);
 
-    // DifferentialPilot reversePilot = new DifferentialPilot(
-    //   wheelDiameter, trackWidth, lRegulatedMotor, rRegulatedMotor, true
-    // );
-    // Navigator reverseNavigator = new Navigator(reversePilot);
+    DifferentialPilot reversePilot = new DifferentialPilot(
+      Hardware.wheelDiameter, Hardware.trackWidth, lRegulatedMotor, rRegulatedMotor, true
+    );
+    Navigator reverseNavigator = new Navigator(reversePilot);
 
     idLine = new IdentifyLine(lLightSensor, pilot);
     compass = new CompassAlign(compassHT, pilot);
@@ -87,15 +85,15 @@ public class Project {
 
     Button.waitForAnyPress();
 
-    compass.calibrate();
+    // compass.calibrate();
 
     while(true) {
-      idLine.run(45);
+      idLine.run(48);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
 
-      idLine.run(45);
+      idLine.run(48);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
@@ -106,32 +104,52 @@ public class Project {
       pilot.quickStop();
       pilot.setRotateSpeed(40);
       pilot.setTravelSpeed(5);
+
+      if (pipe == Sonar.Pipe.SHORT) {
+        pilot.travel(10, false);
+      } else {
+        pilot.travel(5, false);
+      }
+
       pilot.rotate(90, false);
-      pilot.travel(5, false);
+      pilot.travel(15, false);
 
       Claw.Color color = claw.run(true);
       LCD.drawString("CLAW COLOR " + color, 0, 2);
 
-      pilot.travel(-10);
-      // pilot.rotate(90);
+      pilot.travel(-20);
+      pilot.rotate(90);
 
-      Pose pose = navigator.getPoseProvider().getPose();
-      LCD.drawString("X" + pose.getX(), 0, 3);
-      LCD.drawString("Y" + pose.getY(), 0, 4);
-
-      // Button.waitForAnyPress();
-
-      double y = Hardware.trackWidth / 2;
-      pilot.travel(-y);
-      pilot.rotate(-89);
-
-      pilot.rotate(89);
+      idLine.run(48);
+      pilot.rotate(-90);
+      idLine.run(48);
+      pilot.rotate(90);
 
       Arena.Location destiny = define_destiny(color, pipe);
-      Deliver.run(0, (float) 0, destiny); // TODO: decide starting coordinates
 
-      LCD.drawString("WAITING", 0, 0);
-      sleep(1000);
+      float x = 6;
+      float y = 6;
+
+      Path path = Deliver.run(x, y, destiny);
+
+      reversePilot.setRotateSpeed(40);
+      reversePilot.setTravelSpeed(5);
+
+      reverseNavigator.getPoseProvider().setPose(new Pose(x, y, 0));
+      reverseNavigator.clearPath();
+      reverseNavigator.followPath(path);
+      reverseNavigator.waitForStop();
+
+      reversePilot.rotate(180);
+      claw.run(false);
+
+      Path reversePath = new Path();
+      for (int i = 0; i < path.size() - 1; ++i) {
+        Waypoint wp = path.get(i);
+        reversePath.add(0, wp);
+      }
+      reverseNavigator.clearPath();
+      reverseNavigator.followPath(reversePath);
     }
   }
 }
