@@ -79,10 +79,10 @@ public class Project {
 
     Button.waitForAnyPress();
 
-    compass.calibrate();
+    compass.reset();
 
     while(true) {
-      idLine.run(25);
+      idLine.run(38); // 25
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
@@ -106,26 +106,35 @@ public class Project {
       }
 
       pilot.rotate(90, false);
-      pilot.travel(9, false);
+      pilot.travel(11, false);
 
-      Claw.Color color = claw.run(true);
+      claw.run(true);
+      pilot.travel(-10);
+
+      Hardware.sleep(1250);
+      Claw.Color color = claw.getColor();
       LCD.drawString("CLAW COLOR " + color, 0, 2);
 
-      pilot.travel(-20);
+      pilot.travel(-8);
       pilot.rotate(90);
 
+      compass.run();
       idLine.run(25);
+      compass.run();
 
+      pilot.setRotateSpeed(40);
       pilot.rotate(-90);
-      idLine.run(30);
-      pilot.rotate(90);
 
+      idLine.run(30);
+
+      pilot.setRotateSpeed(40);
+      pilot.rotate(90);
       compass.run();
 
       Arena.Location destiny = define_destiny(color, pipe);
 
-      float x = 6;
-      float y = 6;
+      float x = 8f;
+      float y = 4.7f;
 
       Path path = Deliver.run(0, 0, destiny);
       Path reversePath = new Path();
@@ -134,7 +143,7 @@ public class Project {
         reversePath.add(0, wp);
       }
 
-      reversePilot.setRotateSpeed(40);
+      reversePilot.setRotateSpeed(35);
       reversePilot.setTravelSpeed(8);
 
       reverseNavigator.getPoseProvider().setPose(new Pose(x, y, 0));
@@ -142,8 +151,13 @@ public class Project {
       reverseNavigator.followPath(path);
       reverseNavigator.waitForStop();
       reversePilot.rotate(180);
+      reversePilot.travel(5);
 
+      Hardware.sleep(500);
       claw.run(false);
+
+      pilot.setRotateSpeed(50);
+      pilot.setTravelSpeed(16);
 
       reverseNavigator.clearPath();
       reverseNavigator.followPath(reversePath);
