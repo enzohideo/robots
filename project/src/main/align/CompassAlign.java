@@ -13,6 +13,7 @@ public class CompassAlign {
   static int rotateTime = 2;
   static int calibrationRotateSpeed = 360 / 10;
   static int waitForCompassToSettle = 1250;
+  static double calibrationDegrees = 540 + 2.5;
 
   CompassHTSensor compass;
   DifferentialPilot pilot;
@@ -26,7 +27,7 @@ public class CompassAlign {
     compass.startCalibration();
 
     pilot.setRotateSpeed(calibrationRotateSpeed);
-    pilot.rotate(540);
+    pilot.rotate(calibrationDegrees);
     pilot.quickStop();
 
     compass.stopCalibration();
