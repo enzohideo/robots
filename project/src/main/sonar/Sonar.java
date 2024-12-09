@@ -81,7 +81,7 @@ public class Sonar {
 
   public Pipe run() {
     this.distances.reset();
-    this.pilot.setTravelSpeed(2.5);
+    this.pilot.setTravelSpeed(3); // 2.5
     this.pilot.forward();
     this.sonar.continuous();
 
