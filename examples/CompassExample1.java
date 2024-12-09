@@ -1,3 +1,4 @@
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
@@ -14,9 +15,19 @@ class CompassExample1 {
   static NXTRegulatedMotor leftMotor = Motor.A;
   static NXTRegulatedMotor rightMotor = Motor.C;
 
+  static void sleep(int millis) {
+    try {
+      Thread.sleep(millis);
+    } catch(InterruptedException error) {
+      LCD.drawString("Failed to sleep", 0, 0);
+    }
+  }
+
   public static void main(String[] args) {
     CompassHTSensor compass = new CompassHTSensor(compassPort);
     DifferentialPilot pilot = new DifferentialPilot(5.6, 11.5, leftMotor, rightMotor);
+
+    Button.waitForAnyPress();
 
     LCD.drawString("Calibrating", 0, 0);
     compass.startCalibration();
@@ -24,11 +35,7 @@ class CompassExample1 {
     pilot.rotate(360 * 1.5);        // 1.5 rotations
     compass.stopCalibration();
 
-    try {
-      Thread.sleep(2000);
-    } catch(InterruptedException error) {
-      LCD.drawString("Failed to sleep", 0, 0);
-    }
+    sleep(2000);
 
     compass.resetCartesianZero();
 
@@ -41,6 +48,7 @@ class CompassExample1 {
       LCD.clear(3);
       LCD.drawString(Float.toString(compass.getDegrees()), 0, 1);
       LCD.drawString(Float.toString(compass.getDegreesCartesian()), 0, 3);
+      sleep(500);
     }
   }
 }
