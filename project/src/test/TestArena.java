@@ -9,12 +9,12 @@ public class TestArena extends Test {
     Arena arena = new Arena();
 
     double[][] answer = {
-      { 14.75, 15. },
-      { 44.25, 15. },
-      { 44.25, 45. },
-      { 44.25, 75. },
-      { 73.75, 75. },
-      { 73.75, 105.}
+      { 15., 14.75 },
+      { 45., 14.75 },
+      { 45., 44.25 },
+      { 45., 73.75 },
+      { 75., 73.75 },
+      { 75., 103.25}
     };
 
     Path result = arena.findRoute(0, 0, Arena.Location.DRUGSTORE);
