@@ -32,6 +32,10 @@ public class CompassAlign {
 
     compass.stopCalibration();
     Hardware.sleep(waitForCompassToSettle); // wait compass to settle
+    reset();
+  }
+
+  public void reset() {
     compass.resetCartesianZero();
   }
 
