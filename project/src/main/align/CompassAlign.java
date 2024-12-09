@@ -9,7 +9,8 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 public class CompassAlign {
   static float maxDegreesError = 0.05f;
-  static int rotateSpeed = 5;
+  static int minRotateSpeed = 5;
+  static int rotateTime = 2;
   static int calibrationRotateSpeed = 360 / 10;
   static int waitForCompassToSettle = 1250;
 
@@ -47,13 +48,18 @@ public class CompassAlign {
 
   public void run() {
     float degrees = getDegrees();
-    pilot.setRotateSpeed(rotateSpeed);
+    LCD.drawString("Compass", 0, 0);
     while(Math.abs(degrees) > maxDegreesError) {
-      LCD.clear(0);
-      LCD.drawString("degrees: " + degrees, 0, 0);
+      LCD.clear(1);
+      LCD.clear(2);
+      LCD.drawString("before: " + degrees, 0, 1);
+      pilot.setRotateSpeed(Math.max(Math.abs(degrees / rotateTime), minRotateSpeed));
       pilot.rotate(- degrees);
+
       Hardware.sleep(waitForCompassToSettle);
+
       degrees = getDegrees();
+      LCD.drawString("after: " + degrees, 0, 2);
     }
   }
 

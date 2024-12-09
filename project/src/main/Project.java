@@ -79,7 +79,7 @@ public class Project {
 
     Button.waitForAnyPress();
 
-    // compass.calibrate();
+    compass.calibrate();
 
     while(true) {
       idLine.run(48);
@@ -132,7 +132,7 @@ public class Project {
       }
 
       reversePilot.setRotateSpeed(40);
-      reversePilot.setTravelSpeed(5);
+      reversePilot.setTravelSpeed(8);
 
       reverseNavigator.getPoseProvider().setPose(new Pose(x, y, 0));
       reverseNavigator.clearPath();
@@ -146,6 +146,8 @@ public class Project {
       reverseNavigator.followPath(reversePath);
       reverseNavigator.waitForStop();
       reversePilot.rotate(180);
+
+      compass.run();
     }
   }
 }
