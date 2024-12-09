@@ -13,7 +13,7 @@ public class CompassAlign {
   static int rotateTime = 2;
   static int calibrationRotateSpeed = 360 / 10;
   static int waitForCompassToSettle = 1250;
-  static double calibrationDegrees = 540 + 2.5;
+  static double calibrationDegrees = 540 + 2;
 
   CompassHTSensor compass;
   DifferentialPilot pilot;
