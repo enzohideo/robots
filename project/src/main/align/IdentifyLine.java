@@ -22,7 +22,7 @@ public class IdentifyLine {
     Arrays.fill(lightValues, 90);
     int index = 0;
 
-    pilot.setTravelSpeed(5);
+    pilot.setTravelSpeed(4); // 5
     pilot.forward();
 
     int lightSum = 90 * lightValues.length;
@@ -55,9 +55,6 @@ public class IdentifyLine {
     );
     LightSensor sensor = new LightSensor(Hardware.lLightSensorPort);
     IdentifyLine idline = new IdentifyLine(sensor, pilot);
-    
-    pilot.setRotateSpeed(40);
-    pilot.setTravelSpeed(5);
 
     Button.waitForAnyPress();
     idline.run(45);
