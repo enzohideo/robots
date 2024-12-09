@@ -138,12 +138,14 @@ public class Project {
       reverseNavigator.clearPath();
       reverseNavigator.followPath(path);
       reverseNavigator.waitForStop();
-
       reversePilot.rotate(180);
+
       claw.run(false);
 
       reverseNavigator.clearPath();
       reverseNavigator.followPath(reversePath);
+      reverseNavigator.waitForStop();
+      reversePilot.rotate(180);
     }
   }
 }
