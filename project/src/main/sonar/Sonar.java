@@ -3,8 +3,10 @@ package sonar;
 import hardware.Hardware;
 import java.util.Arrays;
 
+import align.IdentifyLine;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.nxt.LightSensor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.DifferentialPilot;
@@ -19,8 +21,8 @@ public class Sonar {
   DifferentialPilot pilot;
 
   // TODO: Distinguish short from tall pipes
-  private float[] shortPipeThreshold = { 80f, 24f };
-  private float[] tallPipeThreshold = { 35f, 16f };
+  private float[] shortPipeThreshold = { 220f, 27f };
+  private float[] tallPipeThreshold = { 42f, 16f };
 
   class Distances {
     int[] array;
@@ -31,6 +33,10 @@ public class Sonar {
     public Distances(int size) {
       this.size = size;
       this.array = new int[this.size];
+      reset();
+    }
+
+    public void reset() {
       this.sum = 255 * this.size;
       Arrays.fill(this.array, 255);
     }
@@ -74,7 +80,8 @@ public class Sonar {
   }
 
   public Pipe run() {
-    this.pilot.setTravelSpeed(5);
+    this.distances.reset();
+    this.pilot.setTravelSpeed(2.5);
     this.pilot.forward();
     this.sonar.continuous();
 
@@ -105,15 +112,16 @@ public class Sonar {
       LCD.drawString("Avg: " + Float.toString(distances.avg()), 0, 0);
       LCD.drawString("Var: " + Float.toString(distances.var()), 0, 3);
 
-      distance = distances.min();
       // float avg = distances.avg();
 
       if (distances.var() > 4e3) continue;
 
-      if (distance < this.tallPipeThreshold[0]) {
+      double avg = distances.avg();
+
+      if (avg < this.tallPipeThreshold[0]) {
         LCD.drawString("TALL", 0, 4);
         return Pipe.TALL;
-      } else if (distance < this.shortPipeThreshold[0]) {
+      } else if (avg < this.shortPipeThreshold[0]) {
         LCD.drawString("SHORT", 0, 4);
         return Pipe.SHORT;
       }
@@ -146,21 +154,37 @@ public class Sonar {
     DifferentialPilot pilot = new DifferentialPilot(
       Hardware.wheelDiameter, Hardware.trackWidth, lMotor, rMotor
     );
+
+    LightSensor lLightSensor = new LightSensor(Hardware.lLightSensorPort);
+    IdentifyLine idLine = new IdentifyLine(lLightSensor, pilot);
     Sonar sonar = new Sonar(ultrasonicSensor, pilot);
-    Button.waitForAnyPress();
 
-    Pipe pipe = sonar.run();
+    while (true) {
+      Button.waitForAnyPress();
 
-    pilot.quickStop();
-    pilot.setRotateSpeed(40);
-    pilot.setTravelSpeed(5);
+      idLine.run(25);
 
-    if (pipe == Sonar.Pipe.SHORT) {
-      pilot.travel(10, false);
-    } else {
-      pilot.travel(5, false);
+      pilot.setRotateSpeed(40);
+      pilot.rotate(-90);
+
+      idLine.run(30);
+
+      pilot.setRotateSpeed(40);
+      pilot.rotate(-90);
+
+      Pipe pipe = sonar.run();
+
+      pilot.quickStop();
+      pilot.setRotateSpeed(40);
+      pilot.setTravelSpeed(2.5);
+
+      if (pipe == Sonar.Pipe.SHORT) {
+        pilot.travel(2, false);
+      } else {
+        pilot.travel(4, false);
+      }
+
+      pilot.rotate(90, false);
     }
-
-    pilot.rotate(90, false);
   }
 }

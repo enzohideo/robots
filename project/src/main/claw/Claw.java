@@ -9,7 +9,7 @@ import lejos.nxt.LCD;
 import lejos.nxt.Button;
 
 public class Claw {
-  static int closeAngle = -45;
+  static int closeAngle = -55;
 
   ColorSensor colorSensor;
   NXTRegulatedMotor motor;

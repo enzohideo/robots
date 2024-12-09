@@ -82,12 +82,12 @@ public class Project {
     compass.calibrate();
 
     while(true) {
-      idLine.run(48);
+      idLine.run(25);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
 
-      idLine.run(48);
+      idLine.run(30);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
@@ -100,13 +100,13 @@ public class Project {
       pilot.setTravelSpeed(5);
 
       if (pipe == Sonar.Pipe.SHORT) {
-        pilot.travel(10, false);
+        pilot.travel(2, false);
       } else {
-        pilot.travel(5, false);
+        pilot.travel(4, false);
       }
 
       pilot.rotate(90, false);
-      pilot.travel(15, false);
+      pilot.travel(10, false);
 
       Claw.Color color = claw.run(true);
       LCD.drawString("CLAW COLOR " + color, 0, 2);
@@ -114,9 +114,9 @@ public class Project {
       pilot.travel(-20);
       pilot.rotate(90);
 
-      idLine.run(48);
+      idLine.run(25);
       pilot.rotate(-90);
-      idLine.run(48);
+      idLine.run(30);
       pilot.rotate(90);
 
       Arena.Location destiny = define_destiny(color, pipe);

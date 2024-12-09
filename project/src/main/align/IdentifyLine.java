@@ -18,14 +18,14 @@ public class IdentifyLine {
 
   public void run(int lineColor) {
     setFloodlight(true);
-    int[] lightValues = new int[8];
-    Arrays.fill(lightValues, 60);
+    int[] lightValues = new int[16];
+    Arrays.fill(lightValues, 90);
     int index = 0;
 
     pilot.setTravelSpeed(5);
     pilot.forward();
 
-    int lightSum = 60 * lightValues.length;
+    int lightSum = 90 * lightValues.length;
     double lightAvg;
     do {
         int lightValue = sensor.getLightValue();
