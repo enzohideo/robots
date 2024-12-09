@@ -117,6 +117,7 @@ public class Project {
       idLine.run(48);
       pilot.rotate(-90);
       idLine.run(48);
+      pilot.rotate(90);
 
       Arena.Location destiny = define_destiny(color, pipe);
 
