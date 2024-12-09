@@ -103,9 +103,9 @@ public class Arena {
 
     for (int i = 0; i < 5; ++i) {
       for (int j = 0; j < 6; ++j) {
-        this.nodes[i*5 + j] = new Waypoint(
-          initialYValue + j * 29.5,
-          initialXValue + i * 30.0
+        this.nodes[j*5 + i] = new Waypoint(
+          initialXValue + i * 30.0,
+          initialYValue + j * 29.5
         );
       }
     }
