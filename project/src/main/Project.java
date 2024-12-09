@@ -106,7 +106,7 @@ public class Project {
       }
 
       pilot.rotate(90, false);
-      pilot.travel(10, false);
+      pilot.travel(9, false);
 
       Claw.Color color = claw.run(true);
       LCD.drawString("CLAW COLOR " + color, 0, 2);
@@ -115,16 +115,19 @@ public class Project {
       pilot.rotate(90);
 
       idLine.run(25);
+
       pilot.rotate(-90);
       idLine.run(30);
       pilot.rotate(90);
+
+      compass.run();
 
       Arena.Location destiny = define_destiny(color, pipe);
 
       float x = 6;
       float y = 6;
 
-      Path path = Deliver.run(x, y, destiny);
+      Path path = Deliver.run(0, 0, destiny);
       Path reversePath = new Path();
       for (int i = 0; i < path.size() - 1; ++i) {
         Waypoint wp = path.get(i);
