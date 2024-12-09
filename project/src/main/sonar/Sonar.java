@@ -162,7 +162,7 @@ public class Sonar {
     while (true) {
       Button.waitForAnyPress();
 
-      idLine.run(25);
+      idLine.run(38);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
@@ -171,6 +171,8 @@ public class Sonar {
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
+
+      Button.waitForAnyPress();
 
       Pipe pipe = sonar.run();
 
