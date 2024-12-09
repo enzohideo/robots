@@ -8,6 +8,7 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 
 public class Deliver {
@@ -41,11 +42,23 @@ public class Deliver {
     for (Location location : Arena.Location.values()) {
       LCD.drawString("Location " + location.name(), 0, 0);
       Button.waitForAnyPress();
+
       Path path = deliver.run(0, 0, location);
+      Path reversePath = new Path();
+      for (int i = 0; i < path.size() - 1; ++i) {
+        Waypoint wp = path.get(i);
+        reversePath.add(0, wp);
+      }
+
       navigator.getPoseProvider().setPose(new Pose(0, 0, 0));
       navigator.clearPath();
       navigator.followPath(path);
       navigator.waitForStop();
+
+      pilot.rotate(180);
+
+      navigator.clearPath();
+      navigator.followPath(reversePath);
     }
   }
 }

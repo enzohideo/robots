@@ -125,6 +125,11 @@ public class Project {
       float y = 6;
 
       Path path = Deliver.run(x, y, destiny);
+      Path reversePath = new Path();
+      for (int i = 0; i < path.size() - 1; ++i) {
+        Waypoint wp = path.get(i);
+        reversePath.add(0, wp);
+      }
 
       reversePilot.setRotateSpeed(40);
       reversePilot.setTravelSpeed(5);
@@ -137,11 +142,6 @@ public class Project {
       reversePilot.rotate(180);
       claw.run(false);
 
-      Path reversePath = new Path();
-      for (int i = 0; i < path.size() - 1; ++i) {
-        Waypoint wp = path.get(i);
-        reversePath.add(0, wp);
-      }
       reverseNavigator.clearPath();
       reverseNavigator.followPath(reversePath);
     }
