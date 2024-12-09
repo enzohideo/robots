@@ -59,6 +59,7 @@ public class Deliver {
 
       navigator.clearPath();
       navigator.followPath(reversePath);
+      navigator.waitForStop();
     }
   }
 }
