@@ -13,6 +13,7 @@ public class CompassAlign {
   static int rotateTime = 2;
   static int calibrationRotateSpeed = 360 / 10;
   static int waitForCompassToSettle = 1250;
+  static int maxIterations = 5;
   static double calibrationDegrees = 540 + 2;
 
   CompassHTSensor compass;
@@ -54,7 +55,8 @@ public class CompassAlign {
   public void run() {
     float degrees = getDegrees();
     LCD.drawString("Compass", 0, 0);
-    while(Math.abs(degrees) > maxDegreesError) {
+    int count = 0;
+    while(Math.abs(degrees) > maxDegreesError && count < maxIterations) {
       LCD.clear(1);
       LCD.clear(2);
       LCD.drawString("before: " + degrees, 0, 1);
@@ -65,6 +67,7 @@ public class CompassAlign {
 
       degrees = getDegrees();
       LCD.drawString("after: " + degrees, 0, 2);
+      count++;
     }
   }
 
