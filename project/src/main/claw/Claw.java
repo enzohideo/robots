@@ -211,6 +211,7 @@ public class Claw {
     else
       this.motor.rotateTo(0);
 
+    Hardware.sleep(1250);
     return getColor();
   }
 
