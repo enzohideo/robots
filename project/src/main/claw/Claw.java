@@ -1,6 +1,7 @@
 package claw;
 
 import java.lang.Math;
+import java.util.Arrays;
 
 import hardware.Hardware;
 import lejos.nxt.ColorSensor;
@@ -131,11 +132,11 @@ public class Claw {
     }
   }
 
-  Color getColor() {
+  public Color getColor() {
     //ColorSensor.Color[] colors = ColorSensor.Color[20];
     int colors[] = {0, 0, 0, 0, 0};
      
-    int max = 10;
+    int max = 15;
     int i = 0;
     while(i < max) {
       i += 1;
@@ -211,7 +212,6 @@ public class Claw {
     else
       this.motor.rotateTo(0);
 
-    Hardware.sleep(1250);
     return getColor();
   }
 
