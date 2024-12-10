@@ -45,7 +45,7 @@ public class Deliver {
       LCD.drawString("Location " + location.name(), 0, 0);
       Button.waitForAnyPress();
 
-      idLine.run(38);
+      idLine.run(35);
 
       pilot.setRotateSpeed(40);
       pilot.rotate(90);
@@ -56,10 +56,12 @@ public class Deliver {
       pilot.rotate(-88);
 
       float x = 8f;
-      float y = 4.7f;
+      float y = 5f;
 
       pilot.setRotateSpeed(40);
       pilot.setTravelSpeed(10);
+
+      Button.waitForAnyPress();
 
       Path path = deliver.run(0, 0, location);
       Path reversePath = new Path();
