@@ -102,12 +102,20 @@ public class Arena {
     double initialYValue = 29.5 / 2;
 
     for (int i = 0; i < 5; ++i) {
-      for (int j = 0; j < 6; ++j) {
+      for (int j = 0; j < 5; ++j) {
         this.nodes[j*5 + i] = new Waypoint(
           initialXValue + i * 30.0,
           initialYValue + j * 29.5
         );
       }
+    }
+
+    for (int i = 0; i < 5; ++i) {
+      int j = 5;
+      this.nodes[j*5 + i] = new Waypoint(
+        initialXValue + i * 30.0,
+        initialYValue + j * 29.5 - 5 // park is slightly smaller
+      );
     }
   }
 
