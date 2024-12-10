@@ -109,12 +109,10 @@ public class Claw {
 
   public static int classifyHue(double hue) {
     //LCD.drawString(Double.toString(hue), 0, 6);
-    if (hue >= 180 && hue <= 270) {
-      return 2;
-    } else if (hue >= 60 && hue < 180) {
-        return 1;
+    if (hue >= 135) {
+      return ColorSensor.Color.BLUE;
     } else {
-        return 0;
+      return ColorSensor.Color.GREEN;
     }
     /* 
     if (hue >= 0 && hue < 30 || hue >= 330 && hue <= 360) {
@@ -139,14 +137,11 @@ public class Claw {
     //ColorSensor.Color[] colors = ColorSensor.Color[20];
     int colors[] = {0, 0, 0, 0, 0};
      
-    int max = 15;
-    int i = 0;
-    while(i < max) {
-      i += 1;
+    for (int i = 0; i < 15; ++i) {
       int id = colorSensor.getColorID();
       if (id > 3) 
         id = 4;
-      else if (id == 2) {
+      else if (id == ColorSensor.Color.GREEN) {
         ColorSensor.Color color = colorSensor.getColor();
         int r = color.getRed();
         int b = color.getBlue();
@@ -154,7 +149,7 @@ public class Claw {
         double[] hsv = rgb2hsv(r, g, b);
         double hue = hsv[0];
         int index = classifyHue(hue);
-        if (index == 1 || index == 2)
+        if (index == ColorSensor.Color.BLUE)
           id = index;
       }
       colors[id] += 1;
@@ -229,53 +224,32 @@ public class Claw {
   }
 
   public static void main(String[] args) {
-    LCD.drawString("Color Sensor", 0, 0);
-    Button.waitForAnyPress();
-
     NXTRegulatedMotor clawMotor = new NXTRegulatedMotor(Hardware.clawMotorPort);
     ColorSensor colorSensor = new ColorSensor(Hardware.clawColorSensorPort);
     Claw claw = new Claw(clawMotor, colorSensor);
 
-    claw.run(true);
-
-    while (true) {
-      //LCD.clear();
+    do {
+      Button.waitForAnyPress();
+      LCD.clear();
+      LCD.drawString("Color Sensor", 0, 0);
+      claw.run(true);
       Color c = claw.getColor();
       if (c == Color.RED) {
         LCD.drawString("RED", 0, 1);
-        LCD.clear(2);
-        LCD.clear(3);
-        LCD.clear(4);
-        //LCD.clear(5);
       }
       else if (c == Color.GREEN) {
-        LCD.drawString("GREEN", 0, 2);
-        LCD.clear(1);
-        LCD.clear(3);
-        LCD.clear(4);
-        //LCD.clear(5);
+        LCD.drawString("GREEN", 0, 1);
       }
       else if (c == Color.BLUE) {
-        LCD.drawString("BLUE", 0, 3);
-        LCD.clear(2);
-        LCD.clear(1);
-        LCD.clear(4);
-        //LCD.clear(5);
+        LCD.drawString("BLUE", 0, 1);
       }
       else if (c == Color.YELLOW) {
-        LCD.drawString("YELLOW", 0, 4);
-        LCD.clear(2);
-        LCD.clear(3);
-        LCD.clear(1);
-        //LCD.clear(5);
+        LCD.drawString("YELLOW", 0, 1);
       }
       else if (c == Color.UNDEFINED) {
-        LCD.drawString("UNDEFINED", 0, 5);
-        LCD.clear(2);
-        LCD.clear(3);
-        LCD.clear(4);
-        LCD.clear(1);
+        LCD.drawString("UNDEFINED", 0, 1);
       }
-    }
+      claw.run(false);
+    } while (true);
   }
 }
