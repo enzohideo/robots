@@ -107,14 +107,17 @@ public class Claw {
 
   }
 
-  public static int classifyHue(double hue, double saturation) {
+  public static int classifyHue(double hue) {
     //LCD.drawString(Double.toString(hue), 0, 6);
+    if (hue >= 180 && hue <= 270) {
+      return 2;
+    } else if (hue >= 60 && hue < 180) {
+        return 1;
+    } else {
+        return 0;
+    }
+    /* 
     if (hue >= 0 && hue < 30 || hue >= 330 && hue <= 360) {
-      /*if (saturation < 0.5) {
-          return 1;
-      } else {
-          return 0;
-      }*/
       return 0;
       //return Color.RED;
     } else if (hue >= 30 && hue < 90) {
@@ -129,7 +132,7 @@ public class Claw {
     } else {
         return 4;
       //return Color.INDEFINED;
-    }
+    }*/
   }
 
   public Color getColor() {
@@ -141,8 +144,18 @@ public class Claw {
     while(i < max) {
       i += 1;
       int id = colorSensor.getColorID();
-      if (id > 3) {
+      if (id > 3) 
         id = 4;
+      else if (id == 2) {
+        ColorSensor.Color color = colorSensor.getColor();
+        int r = color.getRed();
+        int b = color.getBlue();
+        int g = color.getGreen();
+        double[] hsv = rgb2hsv(r, g, b);
+        double hue = hsv[0];
+        int index = classifyHue(hue);
+        if (index == 1 || index == 2)
+          id = index;
       }
       colors[id] += 1;
     }
