@@ -1,9 +1,11 @@
 package deliver;
 
+import align.IdentifyLine;
 import deliver.Arena.Location;
 import hardware.Hardware;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.nxt.LightSensor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
@@ -12,11 +14,9 @@ import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 
 public class Deliver {
-  private Navigator navigator;
   private Arena deliver;
 
   public Deliver(Navigator navigator) {
-    this.navigator = navigator;
     this.deliver = new Arena();
   }
 
@@ -32,9 +32,11 @@ public class Deliver {
     DifferentialPilot pilot = new DifferentialPilot(
       Hardware.wheelDiameter, Hardware.trackWidth, lRegulatedMotor, rRegulatedMotor, true
     );
-
-    pilot.setRotateSpeed(40);
-    pilot.setTravelSpeed(10);
+    DifferentialPilot reversePilot = new DifferentialPilot(
+      Hardware.wheelDiameter, Hardware.trackWidth, lRegulatedMotor, rRegulatedMotor, false
+    );
+    LightSensor lLightSensor = new LightSensor(Hardware.lLightSensorPort);
+    IdentifyLine idLine = new IdentifyLine(lLightSensor, reversePilot);
 
     Navigator navigator = new Navigator(pilot);
     Deliver deliver = new Deliver(navigator);
@@ -43,6 +45,22 @@ public class Deliver {
       LCD.drawString("Location " + location.name(), 0, 0);
       Button.waitForAnyPress();
 
+      idLine.run(38);
+
+      pilot.setRotateSpeed(40);
+      pilot.rotate(90);
+
+      idLine.run(30);
+
+      pilot.setRotateSpeed(40);
+      pilot.rotate(-88);
+
+      float x = 8f;
+      float y = 4.7f;
+
+      pilot.setRotateSpeed(40);
+      pilot.setTravelSpeed(10);
+
       Path path = deliver.run(0, 0, location);
       Path reversePath = new Path();
       for (int i = 0; i < path.size() - 1; ++i) {
@@ -50,12 +68,14 @@ public class Deliver {
         reversePath.add(0, wp);
       }
 
-      navigator.getPoseProvider().setPose(new Pose(0, 0, 0));
+      navigator.getPoseProvider().setPose(new Pose(x, y, 0));
       navigator.clearPath();
       navigator.followPath(path);
       navigator.waitForStop();
 
       pilot.rotate(180);
+      Pose pose = navigator.getPoseProvider().getPose();
+      pose.setHeading(Math.round(pose.getHeading() / 90.0) * 90);
 
       navigator.clearPath();
       navigator.followPath(reversePath);
