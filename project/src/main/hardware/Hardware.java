@@ -17,7 +17,7 @@ public class Hardware {
   public static SensorPort clawColorSensorPort = SensorPort.S1;
 
   public static double wheelDiameter = 5.6;
-  public static double trackWidth = 11.6;
+  public static double trackWidth = 11.62;
 
   public static void sleep(long millis) {
     try {
