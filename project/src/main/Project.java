@@ -159,6 +159,9 @@ public class Project {
       pilot.setRotateSpeed(50);
       pilot.setTravelSpeed(16);
 
+      Pose pose = navigator.getPoseProvider().getPose();
+      pose.setHeading(Math.round(pose.getHeading() / 90.0) * 90);
+
       reverseNavigator.clearPath();
       reverseNavigator.followPath(reversePath);
       reverseNavigator.waitForStop();

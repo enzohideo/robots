@@ -112,10 +112,19 @@ public class TestNode extends Test {
     end();
   }
 
+  // TODO: Move to another test file
+  public static void testHeading() {
+    float heading = 250f;
+    System.out.printf("heading: %f\n", heading);
+    heading = Math.round(heading / 90.0) * 90;
+    System.out.printf("new heading: %f\n", heading);
+  }
+
   public static void main(String[] args) {
     start("Node");
     TestNode.testIsOpen();
     TestNode.testToggle();
+    TestNode.testHeading();
     end();
   }
 }
