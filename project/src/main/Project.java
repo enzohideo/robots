@@ -82,7 +82,7 @@ public class Project {
     compass.reset();
 
     while(true) {
-      idLine.run(38); // 25
+      idLine.run(30); // 25
 
       pilot.setRotateSpeed(40);
       pilot.rotate(-90);
@@ -118,8 +118,8 @@ public class Project {
       pilot.travel(-8);
       pilot.rotate(90);
 
-      compass.run();
-      idLine.run(25);
+      // compass.run();
+      idLine.run(30);
       compass.run();
 
       pilot.setRotateSpeed(40);
@@ -128,13 +128,13 @@ public class Project {
       idLine.run(30);
 
       pilot.setRotateSpeed(40);
-      pilot.rotate(90);
-      compass.run();
+      pilot.rotate(88);
+      // compass.run();
 
       Arena.Location destiny = define_destiny(color, pipe);
 
       float x = 8f;
-      float y = 4.7f;
+      float y = 5f;
 
       Path path = Deliver.run(0, 0, destiny);
       Path reversePath = new Path();
@@ -157,7 +157,7 @@ public class Project {
       claw.run(false);
 
       pilot.setRotateSpeed(50);
-      pilot.setTravelSpeed(16);
+      pilot.setTravelSpeed(20);
 
       Pose pose = navigator.getPoseProvider().getPose();
       pose.setHeading(Math.round(pose.getHeading() / 90.0) * 90);
