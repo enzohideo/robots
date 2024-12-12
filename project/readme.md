@@ -1,6 +1,6 @@
 # Execução do projeto inteiro
 
-```sh make run ```
+`make run`
 
 # Execução de partes individuais
 
@@ -12,7 +12,7 @@
 
 # Testes
 
-```sh make test ```
+`make test`
 
 # Classes
 
